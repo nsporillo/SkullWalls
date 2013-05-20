@@ -1,0 +1,40 @@
+# SkullWalls configuration
+# Enabling debug is not recommended as it outputs a lot of info to console
+# Cuboid-Tool is the tool you use when creating new walls (269 = wood shovel)
+# Default name is the name of a empty skull
+# Protect-Skulls blocks skulls inside walls from being broken by people without permission
+# Click message is sent to the player when they left click a skull 
+# The %p represents the skull's occupier
+# The %e represents the skull clicker
+# The Actions list is not limited to 4, make as many as you please
+# Updating live is not recommended as it is confirmed to be unstable after many joins / leaves
+# Update-Interval is in seconds, it's recommended to be 60 or more
+General:
+  Debug: false
+  Cuboid-Tool: 269
+  Default-Name: 'Steve'
+  Protect-Walls: true
+  Suppress-Full-Warnings: false
+  Update-Interval: 15
+  Show-Vanished: false
+  Show-AFK: true
+Messages:
+  Click: '&7That''s &6%p&7''s skull!'
+Actions:
+  Ban:
+    Tool: 327
+    Command: 'ban %p Ban hammer has spoken!'
+    Permission: 'bukkit.command.ban.player'
+  Kick:
+    Tool: 51
+    Command: 'kick %p Kick fire has spoken!'
+    Permission: 'bukkit.command.kick'
+  Unban:
+    Tool: 326
+    Command: 'pardon %p'
+    Permission: 'bukkit.command.unban.player'
+  Other: 
+    Tool: 286
+    Command: 'tp %p %e'
+    Permission: 'bukkit.command.teleport'
+  

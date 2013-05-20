@@ -1,0 +1,43 @@
+name: SkullWalls
+author: milkywayz 
+main: net.milkycraft.skullwalls.SkullWalls
+website: http://milkycraft.net
+version: 1.5.9
+
+commands:
+    skull:
+      aliases: skw
+permissions:
+  skullwalls.*:
+    description: Allows access to all of SkullWall's features.
+    children:
+      skullwalls.clear: true
+      skullwalls.create: true
+      skullwalls.delete: true
+      skullwalls.list: true
+      skullwalls.fix: true
+      skullwalls.whitelist: true
+      skullwalls.wand.use: true
+      skullwalls.reload: true
+  skullwalls.clear:
+    description: Allows a user to clear their cuboid session.
+  skullwalls.wand:
+    description: Allows a user to get a cuboid wand.
+  skullwalls.create:
+    description: Allows a user to create new skull wall 
+    children:
+      skullwalls.wand.use: true
+  skullwalls.delete:
+    description: Allows a user to delete any skull wall
+  skullwalls.list:
+    description: Allows a user to list all skull walls
+  skullwalls.fix:
+    description: Allows a user to recalculate a wall
+  skullwalls.static:
+    description: Allows a user to set a wall static
+  skullwalls.whitelist:
+    description: Allows a user to toggle the whitelist state for a player
+  skullwalls.wand.use:
+    description: Allows a user to use the wall creation wand
+  skullwalls.reload:
+    description: Allows a user to reload the plugin
