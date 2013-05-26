@@ -18,6 +18,7 @@ General:
   Update-Interval: 15
   Show-Vanished: false
   Show-AFK: true
+  Log-Transfers: true
 Messages:
   Click: '&7That''s &6%p&7''s skull!'
 Actions:
