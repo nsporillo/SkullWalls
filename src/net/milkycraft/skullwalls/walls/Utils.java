@@ -1,12 +1,10 @@
 package net.milkycraft.skullwalls.walls;
 
-import static java.lang.Math.max;
-import static java.lang.Math.min;
+import static java.lang.Math.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 import net.milkycraft.skullwalls.SkullWalls;
 
@@ -18,15 +16,6 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 
 public class Utils {
-
-	private static boolean benching = false;
-
-	public static void bench(long lo) {
-		if (benching) {
-			System.out.println("Recalculation took " + ((System.nanoTime() - lo) / 1000)
-					+ " microseconds");
-		}
-	}
 
 	public static void gen(SkullWall w, int[] b) {
 		int a = 0;
@@ -54,6 +43,47 @@ public class Utils {
 			}
 		}
 	}
+	
+	public static void para(Location b, double t) {
+		for (double x = -t; x < t; x++) {
+			double y = exp(x);
+			b.getWorld().getBlockAt((int) (b.getX() + y), (int) (b.getY() + y),
+					(int) (b.getZ() + y)).setTypeId(1);
+		}
+	}
+
+	public static double getAtleastProbability(int x, int y, double z) {
+		double d = 0D;
+		int a = x - y;
+		for (int i = 0; i <= a; i++) {
+			d += (f(x) / (f(y + i) * f(x - (y + i))) * pow(z, y + i) * pow(1 - z, (a) - i));
+		}
+		return r(d * 100, 1);
+	}
+
+	public static int f(double y) {
+		int r = 1;
+		for (int i = 1; i <= y; ++i)
+			r *= i;
+		return r;
+	}
+
+	public static double[] getAngles(int x, int y, int z) {
+		return new double[] { ang(y, z, x), ang(z, x, y), ang(x, y, z) };
+	}
+
+	public static double ang(double a, double b, double c) {
+		double t = (pow(a, 2) + pow(b, 2) - pow(c, 2)) / (2 * a * b);
+		if (t >= -1 && t <= 1) {
+			return r(toDegrees(acos(t)), 2);
+		}
+		return Double.NaN;
+	}
+
+	public static double r(double v, int p) {
+		long f = (long) pow(10, p);
+		return (double) round(v * f) / f;
+	}
 
 	public static int getRot(BlockFace face) {
 		if (face == BlockFace.SELF) {
@@ -80,17 +110,12 @@ public class Utils {
 		return players;
 	}
 
-	public static List<String> genRandomNames(int b) {
-		List<String> names = new ArrayList<String>(b);
-		Random r = new Random();
-		for (int i = 0; i < b; i++) {
-			char[] w = new char[r.nextInt(8) + 4];
-			for (int j = 0; j < w.length; j++) {
-				w[j] = (char) ('a' + r.nextInt(26));
-			}
-			names.add(new String(w));			
+	public static int getTotalSlots() {
+		int total = 0;
+		for (SkullWall wall : SkullWalls.getWalls()) {
+			total += wall.slots.size();
 		}
-		return names;
+		return total;
 	}
 
 	public static boolean isInRadius(Player p, SkullWall wall, double radius) {
