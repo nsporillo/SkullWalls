@@ -1,9 +1,10 @@
 package net.milkycraft.skullwalls;
 
-import static org.bukkit.ChatColor.RED;
-import net.milkycraft.skullwalls.walls.Slot;
+import static org.bukkit.ChatColor.*;
+import static net.milkycraft.skullwalls.walls.Slot.*;
 import net.milkycraft.skullwalls.walls.Utils;
 
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.SkullType;
@@ -13,8 +14,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDamageEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class ActionListener implements Listener {
@@ -31,6 +34,67 @@ public class ActionListener implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+	public void onRightClick(PlayerInteractEvent e) {
+		final Player p = e.getPlayer();
+		if (e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+			if (e.getClickedBlock().getType() != Material.SKULL) {
+				return;
+			}
+			if (sw.getTrans().contains(p.getName())) {
+				String owner = "";
+				try {
+					owner = getAt(e.getClickedBlock().getLocation()).getOwner();
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+				ItemStack is = p.getItemInHand();
+				ItemStack tg = new ItemStack(is.getTypeId(), 1);
+				if (p.isSneaking()) {
+					tg = new ItemStack(is.getTypeId(), is.getAmount());
+				}
+				int x = tg.getAmount();
+				if (is.getTypeId() != 0 && (is.getAmount() > 0 && x > 0)) {
+					final Player to = Bukkit.getPlayerExact(owner);
+					if (to != null) {
+						if (to.isOnline() && to.getName() != p.getName()) {
+							String z = tg.getType().name().toLowerCase();
+							if (!sw.getAlerts().contains(to.getName())) {
+								to.sendMessage(GREEN + p.getName() + " transferred " + x + " "
+										+ GOLD + z + GREEN + " to you!");
+								to.sendMessage(RED
+										+ "To not recieve these alerts, use /skull give alerts");
+							}
+							if (x == 1) {
+								p.sendMessage(GREEN
+										+ "Transfer the entire stack of items in hand by sneak clicking");
+							}
+							p.sendMessage(GREEN + "You transferred " + x + " " + GOLD + z + GREEN
+									+ " to " + BLUE + owner);
+							final ItemStack aa = tg.clone();
+							Bukkit.getScheduler().scheduleSyncDelayedTask(sw, new Runnable() {
+								@Override
+								public void run() {
+									p.getInventory().removeItem(aa);
+								}
+							}, 2L);
+							Bukkit.getScheduler().scheduleSyncDelayedTask(sw, new Runnable() {
+								@Override
+								public void run() {
+									to.getInventory().addItem(aa);
+								}
+							}, 10L);
+							sw.logTrans(p.getName() + " transfered " + x + " " + z + " to " + owner);
+						}
+					}
+				} else {
+					p.sendMessage(RED + "To transfer an item to " + owner
+							+ ", hold it in hand and right click their head");
+				}
+			}
+		}
+	}
+
+	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onBlockBreak(BlockBreakEvent e) {
 		Player p = e.getPlayer();
 		Block b = e.getBlock();
@@ -43,7 +107,7 @@ public class ActionListener implements Listener {
 						if (Utils.isSlot(b)) {
 							if (p.hasPermission(perm) || p.isOp()) {
 								p.sendMessage(des.replace("#", name));
-								Slot.getAt(b.getLocation()).disable();
+								getAt(b.getLocation()).disable();
 							} else {
 								e.setCancelled(true);
 								p.sendMessage(noperm);
@@ -54,8 +118,7 @@ public class ActionListener implements Listener {
 							sw.getActionWorker().queueQuery(p, name);
 							if (p.hasPermission(perm)) {
 								e.setCancelled(true);
-								p.sendMessage(RED
-										+ "To destroy skull you must sneak and break");
+								p.sendMessage(RED + "To destroy skull you must sneak and break");
 							} else {
 								e.setCancelled(true);
 								p.sendMessage(noperm);
@@ -71,10 +134,8 @@ public class ActionListener implements Listener {
 						ItemStack s = p.getItemInHand();
 						onBlockDamage(new BlockDamageEvent(p, b, s, false));
 						if (Utils.isSlot(b)) {
-							p.sendMessage(RED
-									+ "Block selected is already a part of a skull wall");
-							p.sendMessage(RED
-									+ "Overlapping walls will not perform as expected!");
+							p.sendMessage(RED + "Block selected is already a part of a skull wall");
+							p.sendMessage(RED + "Overlapping walls will not perform as expected!");
 						}
 					}
 				}
@@ -87,7 +148,7 @@ public class ActionListener implements Listener {
 			}
 		}
 	}
-	
+
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onBlockDamage(BlockDamageEvent e) {
 		if (e.getBlock().getType().equals(Material.SKULL)) {
