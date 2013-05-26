@@ -1,12 +1,16 @@
 package net.milkycraft.skullwalls.walls;
 
+import static net.milkycraft.skullwalls.walls.Utils.bind;
+import static net.milkycraft.skullwalls.walls.Utils.gen;
+import static net.milkycraft.skullwalls.walls.Utils.getNextAvailable;
+import static net.milkycraft.skullwalls.walls.Utils.isInRadius;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static net.milkycraft.skullwalls.walls.Utils.*;
 import net.milkycraft.skullwalls.SkullWalls;
 
 import org.bukkit.Bukkit;
@@ -42,11 +46,10 @@ public class SkullWall implements Serializable {
 		this.radius = 15;
 		gen(this, bounds);
 		if (type == WallType.BANNED) {
-			this.banUpdate();
+			this.updateBans();
 		} else {
 			this.init();
 		}
-
 	}
 
 	private void init() {
@@ -73,22 +76,34 @@ public class SkullWall implements Serializable {
 		}
 	}
 
-	private void banUpdate() {
-		System.out.println("Updating " + name + "'s ban cache");
+	private void updateBans() {
+		Set<OfflinePlayer> banned = Bukkit.getBannedPlayers();
+		if(knownBanned == null) {
+			knownBanned = new ArrayList<String>();
+		}
+		if(knownBanned.size() < banned.size()) {
+			a(banned);
+		} else if(knownBanned.size() > banned.size()) {			
+			a(banned);
+		} else {
+			return;
+		}
+		
+	}
+	
+	private void a(Set<OfflinePlayer> banned) {
 		this.wipe();
 		int max = this.slots.size();
 		int tot = 0;
-		Set<OfflinePlayer> band = Bukkit.getBannedPlayers();
-		for (OfflinePlayer op : band) {
-			if (tot < (max-1)) {
+		this.knownBanned.clear();
+		for (OfflinePlayer op : banned) {
+			if (tot < (max - 1)) {
 				getNextAvailable(this).setOwner(op.getName());
 				knownBanned.add(op.getName());
 				tot++;
 			} else {
-				System.err.println("Wall has " + max
-						+ " max slots, theres too many banned players! (" + band.size() + ")");
 				break;
-			}		
+			}
 		}
 	}
 
@@ -110,7 +125,6 @@ public class SkullWall implements Serializable {
 	}
 
 	public void recalculate() {
-		long st = System.nanoTime();
 		if (slots == null) {
 			gen(this, bounds);
 		}
@@ -140,16 +154,10 @@ public class SkullWall implements Serializable {
 					s.setOwner(p.getName());
 				}
 			} else if (type == WallType.BANNED) {
-				if(this.knownBanned == null) {
-					this.knownBanned = new ArrayList<String>();
-				}
-				if (knownBanned.size() != Bukkit.getBannedPlayers().size()) {
-					this.banUpdate();
-				}
+				this.updateBans();
 			}
 		}
 		this.verifyState();
-		bench(st);
 	}
 
 	public void offSet(int num) {
@@ -158,8 +166,8 @@ public class SkullWall implements Serializable {
 		}
 		this.wipe();
 		this.slots = Utils.offset(slots, num);
-		if(type == WallType.BANNED) {
-			this.banUpdate();
+		if (type == WallType.BANNED) {
+			this.updateBans();
 		}
 		this.recalculate();
 	}
@@ -188,7 +196,7 @@ public class SkullWall implements Serializable {
 	public World getWorld() {
 		if (worldObj == null) {
 			worldObj = Bukkit.getWorld(world);
-			this.banUpdate();
+			this.updateBans();
 		}
 		return worldObj;
 	}
