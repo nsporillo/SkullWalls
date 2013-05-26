@@ -10,7 +10,7 @@ import org.bukkit.configuration.ConfigurationSection;
 
 public class YamlConfig extends YamlLoader {
 
-	private boolean debug, report, protect, showvan, showafk;
+	private boolean debug, report, protect, showvan, showafk, logt;
 	private String click, name;
 	private int tool, updateint;
 	private Map<Integer, Action> actionz;
@@ -38,6 +38,7 @@ public class YamlConfig extends YamlLoader {
 		updateint = config.getInt("General.Update-Interval", 10);		
 		showvan = config.getBoolean("General.Show-Vanished", false);		
 		showafk = config.getBoolean("General.Show-AFK", true);
+		logt = config.getBoolean("General.Log-Transfers", true);
 		ConfigurationSection actions = super.getYaml().getConfigurationSection(
 				"Actions");
 		for (String action : actions.getKeys(false)) {
@@ -67,6 +68,10 @@ public class YamlConfig extends YamlLoader {
 		if(config.get("General.Show-AFK") == null) {
 			config.set("General.Show-AFK", true);
 			updated = true;
+		}		
+		if(config.get("General.Log-Transfers") == null) {
+			config.set("General.Log-Transfers", true);
+			updated = true;
 		}
 		if(updated) {
 			plugin.log("Updated config for latest changes!");	
@@ -76,6 +81,10 @@ public class YamlConfig extends YamlLoader {
 	
 	public boolean isDebugging() {
 		return debug;
+	}
+	
+	public boolean isFileLogging() {
+		return logt;
 	}
 	
 	public boolean isReporting() {
