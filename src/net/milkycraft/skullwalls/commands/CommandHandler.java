@@ -35,6 +35,7 @@ public class CommandHandler {
 		this.commands.put("sethead", new SetHeadCommand(plugin));
 		this.commands.put("rotate", new RotateCommand(plugin));
 		this.commands.put("offset", new OffSetCommand(plugin));
+		this.commands.put("give", new GiveCommand(plugin));
 		this.commands.put("version", new VersionCommand(plugin));
 	}
 
