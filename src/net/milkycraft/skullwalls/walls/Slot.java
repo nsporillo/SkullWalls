@@ -74,7 +74,7 @@ public class Slot implements Serializable {
 		try {
 			skull = (Skull) getBlock().getState();
 		} catch (Exception ex) {
-			System.err.println("Error casting skull to slot!");
+			System.err.println("Error casting skull to slot! ("+ex.getMessage()+")");
 			System.err.println("Slot: " + id + " of wall: " + parent.name + "BT: " + this.getBlock().getType().toString());
 			return;
 		}
