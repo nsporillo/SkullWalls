@@ -6,9 +6,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.HashSet;
-import java.util.Set;
-
+import java.util.ArrayList;
+import java.util.List;
 import net.milkycraft.skullwalls.walls.SkullWall;
 
 public class Serializer {
@@ -16,7 +15,7 @@ public class Serializer {
 	private static File dir = new File("plugins" + File.separator + "SkullWalls"
 			+ File.separator + "walls");
 	
-	public static void save(Set<SkullWall> walls) {
+	public static void save(List<SkullWall> walls) {
 		if (!dir.exists()) {
 			dir.mkdir();
 		}
@@ -55,8 +54,8 @@ public class Serializer {
 		}
 	}
 
-	public static Set<SkullWall> load() {
-		Set<SkullWall> local = new HashSet<SkullWall>();
+	public static List<SkullWall> load() {
+		List<SkullWall> local = new ArrayList<SkullWall>();
 		if (!dir.exists()) {
 			dir.mkdir();
 		}
