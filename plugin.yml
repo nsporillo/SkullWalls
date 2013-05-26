@@ -2,7 +2,7 @@ name: SkullWalls
 author: milkywayz 
 main: net.milkycraft.skullwalls.SkullWalls
 website: http://milkycraft.net
-version: 1.5.9
+version: 1.6
 
 commands:
     skull:
