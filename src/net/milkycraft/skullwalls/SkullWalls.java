@@ -2,8 +2,9 @@ package net.milkycraft.skullwalls;
 
 import static org.bukkit.Bukkit.getPluginManager;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
 import net.milkycraft.skullwalls.commands.CommandHandler;
 import net.milkycraft.skullwalls.config.YamlConfig;
 import net.milkycraft.skullwalls.walls.SkullWall;
@@ -17,12 +18,14 @@ import org.kitteh.vanish.staticaccess.VanishNoPacket;
 
 import com.earth2me.essentials.Essentials;
 
-public class SkullWalls extends JavaPlugin  {
-	
-	private static Set<SkullWall> walls = new HashSet<SkullWall>();
-	public static Essentials ess;
+public class SkullWalls extends JavaPlugin {
+
+	private static List<SkullWall> walls = new ArrayList<SkullWall>();
+	private static Essentials ess;
 	private static boolean van;
 	private static boolean afk;
+	private List<String> trans = new ArrayList<String>();
+	private List<String> alerts = new ArrayList<String>();
 	private CommandHandler commands;
 	private ActionWorker aworker;
 	private YamlConfig config;
@@ -42,6 +45,7 @@ public class SkullWalls extends JavaPlugin  {
 		this.aworker = new ActionWorker(this);
 		this.config = new YamlConfig(this, "config.yml");
 		this.loadModules();
+
 		getPluginManager().registerEvents(new ActionListener(this), this);
 		autoUpdate(config.getUpdateInterval());
 		SkullWalls.walls = Serializer.load();
@@ -54,7 +58,13 @@ public class SkullWalls extends JavaPlugin  {
 		}
 	}
 
-	public static Set<SkullWall> getWalls() {
+	public void logTrans(String msg) {
+		if (config.isFileLogging()) {
+			this.log("[Trans] " + msg);
+		}
+	}
+
+	public static List<SkullWall> getWalls() {
 		return SkullWalls.walls;
 	}
 
@@ -63,6 +73,7 @@ public class SkullWalls extends JavaPlugin  {
 			w.wipe();
 		}
 		SkullWalls.walls = null;
+		trans.clear();
 	}
 
 	public ActionWorker getActionWorker() {
@@ -77,6 +88,14 @@ public class SkullWalls extends JavaPlugin  {
 		return this.sesHandler;
 	}
 
+	public List<String> getTrans() {
+		return this.trans;
+	}
+
+	public List<String> getAlerts() {
+		return this.alerts;
+	}
+
 	public void log(String info) {
 		this.getLogger().info(info);
 	}
@@ -89,15 +108,13 @@ public class SkullWalls extends JavaPlugin  {
 
 	public void reload() {
 		Serializer.save(walls);
-		for (SkullWall w : SkullWalls.walls) {
-			w.wipe();
-		}
-		SkullWalls.walls.clear();
+		this.destruct();
 		SkullWalls.walls = Serializer.load();
 		this.struct();
 	}
 
 	public void struct() {
+		trans.clear();
 		for (SkullWall w : SkullWalls.getWalls()) {
 			w.recalculate();
 		}
@@ -112,7 +129,7 @@ public class SkullWalls extends JavaPlugin  {
 					w.recalculate();
 				}
 			}
-		}, 20L, interval*20);
+		}, 20L, interval * 20);
 	}
 
 	private void loadModules() {
@@ -137,7 +154,7 @@ public class SkullWalls extends JavaPlugin  {
 				afk = false;
 			}
 			if (afk) {
-				ess = (Essentials)p;
+				ess = (Essentials) p;
 				log("Essentials found and AFK players arent shown on walls");
 			}
 		} else {
@@ -153,7 +170,8 @@ public class SkullWalls extends JavaPlugin  {
 		try {
 			return VanishNoPacket.isVanished(name);
 		} catch (Exception e) {
-			System.err.println("Error checking if " + name + " is vanished - ( Did you /reload? :/ )");
+			System.err.println("Error checking if " + name
+					+ " is vanished - ( Did you /reload? :/ )");
 			return false;
 		}
 	}
