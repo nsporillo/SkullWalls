@@ -4,13 +4,12 @@ import org.bukkit.Bukkit;
 
 public class Action {
 
-	private final String name;
+	private String name;
 	private String cmd;
-	private final String perm;
-	private final int item;
+	private String perm;
+	private int item;
 
-	public Action(final String name, final String cmd, final String perm,
-			final int item) {
+	public Action(String name, String cmd, String perm, int item) {
 		this.name = name;
 		this.cmd = cmd;
 		this.perm = perm;
