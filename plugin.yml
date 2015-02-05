@@ -1,8 +1,8 @@
 name: SkullWalls
-author: milkywayz 
-main: net.milkycraft.skullwalls.SkullWalls
-website: http://milkycraft.net
-version: 1.6
+author: Nick Porillo 
+main: net.porillo.skullwalls.SkullWalls
+website: http://porillo.net
+version: 1.6.3
 
 commands:
     skull:
@@ -19,6 +19,9 @@ permissions:
       skullwalls.whitelist: true
       skullwalls.wand.use: true
       skullwalls.reload: true
+      skullwalls.offset: true
+      skullwalls.rotate: true
+      skullwalls.sethead: true
   skullwalls.clear:
     description: Allows a user to clear their cuboid session.
   skullwalls.wand:
@@ -41,3 +44,9 @@ permissions:
     description: Allows a user to use the wall creation wand
   skullwalls.reload:
     description: Allows a user to reload the plugin
+  skullwalls.offset:
+    description: Allows a user to offset the wall 
+  skullwalls.rotate:
+    description: Allows a user to rotate a head
+  skullwalls.sethead:
+    description: Allows a user to set the name of a head
