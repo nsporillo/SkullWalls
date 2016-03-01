@@ -9,6 +9,7 @@ import org.bukkit.command.CommandSender;
 import java.util.List;
 
 public class WhitelistCommand extends BaseCommand {
+
     public WhitelistCommand(SkullWalls plugin) {
         super(plugin);
         super.setName("whitelist");
@@ -22,6 +23,7 @@ public class WhitelistCommand extends BaseCommand {
             this.noPermission(s);
             return;
         }
+
         if (args.size() == 0) {
             s.sendMessage(ChatColor.RED + "Specify the name of the wall");
         } else {

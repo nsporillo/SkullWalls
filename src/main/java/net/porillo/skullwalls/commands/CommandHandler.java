@@ -3,14 +3,15 @@ package net.porillo.skullwalls.commands;
 import net.porillo.skullwalls.SkullWalls;
 import net.porillo.skullwalls.walls.SkullWall;
 import net.porillo.skullwalls.walls.Utils;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.*;
 
+import static org.bukkit.ChatColor.*;
+
 public class CommandHandler {
-    private Map<String, Command> commands = new HashMap();
+    private Map<String, Command> commands = new HashMap<>();
 
     public CommandHandler(SkullWalls plugin) {
         this.commands.put("create", new CreateCommand(plugin));
@@ -30,35 +31,33 @@ public class CommandHandler {
     }
 
     public void runCommand(CommandSender sender, String label, String[] args) {
-        Iterator localIterator;
         if (args.length == 1 && args[0].equals("test")) {
-            localIterator = SkullWalls.getWalls().iterator();
+            Iterator localIterator = SkullWalls.getWalls().iterator();
             if (localIterator.hasNext()) {
                 SkullWall sw = (SkullWall) localIterator.next();
-                sender.sendMessage(ChatColor.BLUE + "Wall: " + sw.getName());
-                sender.sendMessage(ChatColor.GOLD + "CentDist: "
-                        + Utils.getDistanceFromCenter(sw, (Player) sender));
-                sender.sendMessage(ChatColor.BLUE + "Transparent: " + sw.isTransparent());
+                sender.sendMessage(BLUE + "Wall: " + sw.getName());
+                sender.sendMessage(GOLD + "CentDist: " + Utils.getDistanceFromCenter(sw, (Player) sender));
+                sender.sendMessage(BLUE + "Transparent: " + sw.isTransparent());
                 return;
             }
         }
+
         if (args.length == 0 || this.commands.get(args[0].toLowerCase()) == null) {
-            sender.sendMessage(ChatColor.GOLD + "SkullWalls is developed by milkywayz");
-            sender.sendMessage(ChatColor.GREEN + "===" + ChatColor.GOLD + " SkullWalls Help "
-                    + ChatColor.GREEN + "===");
-            for (Command cmd : this.commands.values()) {
-                if (cmd.checkPermission(sender)) {
-                    cmd.showHelp(sender, label);
-                }
-            }
+            sender.sendMessage(GOLD + "SkullWalls is developed by milkywayz");
+            sender.sendMessage(GREEN + "===" + GOLD + " SkullWalls Help " + GREEN + "===");
+
+            this.commands.values().stream().filter(cmd -> cmd.checkPermission(sender)).forEach(cmd -> cmd.showHelp(sender, label));
             return;
         }
+
         List arguments = new ArrayList(Arrays.asList(args));
         Command cmd = this.commands.get(((String) arguments.remove(0)).toLowerCase());
         if (arguments.size() < cmd.getRequiredArgs()) {
             cmd.showHelp(sender, label);
             return;
         }
+
+
         cmd.runCommand(sender, arguments);
     }
 }

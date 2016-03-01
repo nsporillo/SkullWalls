@@ -1,48 +1,48 @@
 package net.porillo.skullwalls.commands;
 
 import net.porillo.skullwalls.SkullWalls;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.bukkit.ChatColor.*;
+
 public abstract class BaseCommand implements Command {
-    protected SkullWalls plugin;
+    protected final SkullWalls plugin;
     protected String name;
     protected String permission;
     protected int required = 0;
-    protected List<String> usages = new ArrayList<String>();
+    protected List<String> usages = new ArrayList<>();
 
     public BaseCommand(SkullWalls plugin) {
         this.plugin = plugin;
     }
 
     protected final void addUsage(String sub1, String sub2, String description) {
-        StringBuilder usage = new StringBuilder().append(ChatColor.BLUE).append(
-                String.format("%1$-8s", new Object[]{this.name}));
+        StringBuilder usage = new StringBuilder().append(BLUE).append(String.format("%1$-8s", new Object[]{this.name}));
+
         if (sub1 != null) {
-            usage.append(ChatColor.YELLOW);
+            usage.append(YELLOW);
             usage.append(String.format("%1$-8s", new Object[]{sub1}));
         } else {
             usage.append(String.format("%1$-8s", new Object[]{""}));
         }
+
         if (sub2 != null) {
-            usage.append(ChatColor.AQUA);
+            usage.append(AQUA);
             usage.append(String.format("%1$-8s", new Object[]{sub2}));
         } else {
             usage.append(String.format("%1$-8s", new Object[]{""}));
         }
-        usage.append(ChatColor.GREEN);
+
+        usage.append(GREEN);
         usage.append(description);
         this.usages.add(usage.toString());
     }
 
     public boolean checkPermission(CommandSender sender) {
-        if (this.permission == null) {
-            return true;
-        }
-        return sender.hasPermission(this.permission);
+        return this.permission == null || sender.hasPermission(this.permission);
     }
 
     public int getRequiredArgs() {
@@ -50,7 +50,7 @@ public abstract class BaseCommand implements Command {
     }
 
     protected void noPermission(CommandSender sender) {
-        sender.sendMessage(ChatColor.RED + "You do not have permission to use that command!");
+        sender.sendMessage(RED + "You do not have permission to use that command!");
     }
 
     protected final void setName(String name) {
@@ -67,7 +67,6 @@ public abstract class BaseCommand implements Command {
 
     public void showHelp(CommandSender sender, String label) {
         for (String usage : this.usages)
-            sender.sendMessage(ChatColor.GRAY + String.format("%1$-10s", new Object[]{label})
-                    + usage);
+            sender.sendMessage(GRAY + String.format("%1$-10s", label) + usage);
     }
 }

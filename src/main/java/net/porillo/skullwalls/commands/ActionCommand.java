@@ -68,7 +68,6 @@ public class ActionCommand extends BaseCommand {
     }
 
     public void displayAction(CommandSender sender, Action a, int id) {
-        sender.sendMessage(BLUE + "Action [Name: " + a.getName() + ", Id: " + id + ", Cmd: "
-                + a.getCmd() + "]");
+        sender.sendMessage(BLUE + "Action [Name: " + a.getName() + ", Id: " + id + ", Cmd: " + a.getCmd() + "]");
     }
 }

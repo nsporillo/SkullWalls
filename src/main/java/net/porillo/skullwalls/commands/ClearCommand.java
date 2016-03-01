@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import java.util.List;
 
 public class ClearCommand extends BaseCommand {
+
     public ClearCommand(SkullWalls plugin) {
         super(plugin);
         super.setName("clear");
@@ -21,10 +22,12 @@ public class ClearCommand extends BaseCommand {
             this.noPermission(sender);
             return;
         }
+
         if (sender instanceof ConsoleCommandSender) {
             sender.sendMessage(ChatColor.RED + "Console cannot use this command");
             return;
         }
+
         if (args.size() == 0) {
             this.plugin.getCuboider().clear((Player) sender);
             sender.sendMessage(ChatColor.BLUE + "Cleared your session");

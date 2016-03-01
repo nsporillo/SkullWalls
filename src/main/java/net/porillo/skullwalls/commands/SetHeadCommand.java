@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import java.util.List;
 
 public class SetHeadCommand extends BaseCommand {
+
     public SetHeadCommand(SkullWalls plugin) {
         super(plugin);
         super.setName("sethead");
@@ -25,10 +26,12 @@ public class SetHeadCommand extends BaseCommand {
             this.noPermission(sender);
             return;
         }
+
         if (sender instanceof ConsoleCommandSender) {
             sender.sendMessage(ChatColor.RED + "Console cannot use this command");
             return;
         }
+
         if (args.size() == 1) {
             Block b = ((Player) sender).getTargetBlock(ImmutableSet.of(), 6);
             if (b.getType().equals(Material.SKULL)) {

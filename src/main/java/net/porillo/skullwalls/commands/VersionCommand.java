@@ -8,6 +8,7 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import java.util.List;
 
 public class VersionCommand extends BaseCommand {
+
     public VersionCommand(SkullWalls plugin) {
         super(plugin);
         super.setName("version");

@@ -1,13 +1,14 @@
 package net.porillo.skullwalls.commands;
 
 import net.porillo.skullwalls.SkullWalls;
-import net.porillo.skullwalls.walls.SkullWall;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
 
+import static org.bukkit.ChatColor.*;
+
 public class UpdateCommand extends BaseCommand {
+
     public UpdateCommand(SkullWalls plugin) {
         super(plugin);
         super.setName("update");
@@ -20,19 +21,15 @@ public class UpdateCommand extends BaseCommand {
             this.noPermission(sender);
             return;
         }
+
         if (args.size() == 0) {
-            sender.sendMessage(ChatColor.RED + "Specify the name of the wall");
+            sender.sendMessage(RED + "Specify the name of the wall");
         } else if (args.size() == 1) {
             String arg = args.get(0);
-            for (SkullWall w : SkullWalls.getWalls()) {
-                if (w.getName().equalsIgnoreCase(arg) || arg.equalsIgnoreCase("all")) {
 
-                    w.updateWall(null);
-                }
-            }
-            String wall = arg + "'s";
-            sender.sendMessage(ChatColor.GREEN + "Attempting to update " + ChatColor.GOLD + wall
-                    + ChatColor.GREEN + " heads");
+            SkullWalls.getWalls().stream().filter(w -> w.getName().equalsIgnoreCase(arg) || arg.equalsIgnoreCase("all")).forEach(w -> w.updateWall(null));
+
+            sender.sendMessage(GREEN + "Attempting to update " + GOLD + arg + "'s" + GREEN + " heads");
         }
     }
 }

@@ -2,7 +2,6 @@ package net.porillo.skullwalls.commands;
 
 import com.google.common.collect.ImmutableSet;
 import net.porillo.skullwalls.SkullWalls;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -13,7 +12,10 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 
+import static org.bukkit.ChatColor.*;
+
 public class RotateCommand extends BaseCommand {
+
     public RotateCommand(SkullWalls plugin) {
         super(plugin);
         super.setName("rotate");
@@ -26,15 +28,17 @@ public class RotateCommand extends BaseCommand {
             this.noPermission(sender);
             return;
         }
+
         if (sender instanceof ConsoleCommandSender) {
-            sender.sendMessage(ChatColor.RED + "Console cannot use this command");
+            sender.sendMessage(RED + "Console cannot use this command");
             return;
         }
+
         if (args.size() > 0) {
             Block b = ((Player) sender).getTargetBlock(ImmutableSet.of(), 6);
             if (b.getType().equals(Material.SKULL)) {
                 Skull skull = (Skull) b.getState();
-                BlockFace face = null;
+                BlockFace face;
                 try {
                     face = BlockFace.valueOf(args.get(0).toUpperCase());
                     int rot = -1;
@@ -51,18 +55,16 @@ public class RotateCommand extends BaseCommand {
                     }
                     if (rot > 0) {
                         b.setTypeIdAndData(b.getTypeId(), (byte) rot, true);
-                        sender.sendMessage(ChatColor.BLUE + "Rotation changed to " + ChatColor.GOLD
-                                + face.toString().toLowerCase());
+                        sender.sendMessage(BLUE + "Rotation changed to " + GOLD + face.toString().toLowerCase());
                         return;
                     }
                 } catch (Exception ex) {
-                    sender.sendMessage(ChatColor.RED + "Not a valid block face!");
+                    sender.sendMessage(RED + "Not a valid block face!");
                     return;
                 }
                 skull.setRotation(face);
                 skull.update();
-                sender.sendMessage(ChatColor.BLUE + "Rotation changed to " + ChatColor.GOLD
-                        + face.toString().toLowerCase());
+                sender.sendMessage(BLUE + "Rotation changed to " + GOLD + face.toString().toLowerCase());
             }
         }
     }
