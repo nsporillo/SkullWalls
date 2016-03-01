@@ -77,7 +77,6 @@ public class SkullWall implements Serializable {
 			slot.validate();
 		}
 		for (String player : a(players)) {
-			if (!SkullWalls.isVanished(player) && !SkullWalls.isAFK(player)) {
 				SkullSlot s = this.getNextAvailable();
 				if (s == null)
 					continue;
@@ -97,7 +96,6 @@ public class SkullWall implements Serializable {
 					if (this.knownBanned.size() < Bukkit.getBannedPlayers().size())
 						this.banUpdate();
 				}
-			}
 		}
 		this.verifyState();
 	}
