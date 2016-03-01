@@ -26,10 +26,6 @@ public class Utils {
         }
     }
 
-    public static List<Player> getAllInRadius(SkullWall wall, double radius) {
-        return Bukkit.getOnlinePlayers().stream().filter(p -> Utils.getDistanceFromCenter(wall, p) < radius).collect(Collectors.toList());
-    }
-
     public static boolean isInRadius(Player p, SkullWall wall, double radius) {
         return Utils.getDistanceFromCenter(wall, p) <= radius;
     }
