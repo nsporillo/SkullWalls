@@ -17,7 +17,7 @@ public class VersionCommand extends BaseCommand {
 
     public void runCommand(CommandSender sender, List<String> args) {
         PluginDescriptionFile pdf = this.plugin.getDescription();
-        sender.sendMessage(ChatColor.RED + "[DIAG] [W:" + SkullWalls.getWalls().size() + "]");
+        sender.sendMessage(ChatColor.RED + "[DIAG] [W:" + SkullWalls.getWallHandler().getReadOnlyWalls().size() + "]");
         sender.sendMessage(ChatColor.GOLD + "Version: " + pdf.getVersion());
         sender.sendMessage(ChatColor.GOLD + "Author: " + pdf.getAuthors().get(0));
         sender.sendMessage(ChatColor.GOLD + "Website: " + pdf.getWebsite());

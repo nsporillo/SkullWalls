@@ -1,10 +1,12 @@
 package net.porillo.skullwalls.commands;
 
 import net.porillo.skullwalls.SkullWalls;
+import net.porillo.skullwalls.walls.SkullWall;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
+import java.util.Set;
 
 public class OffSetCommand extends BaseCommand {
 
@@ -24,7 +26,7 @@ public class OffSetCommand extends BaseCommand {
         } else if (args.size() == 2) {
             try {
                 // Find wall and offset by user-input value
-                SkullWalls.getWalls().stream().filter(sw -> sw.getName().equalsIgnoreCase(args.get(0))).forEach(sw -> sw.offSet(Integer.parseInt(args.get(1))));
+                SkullWalls.getWallHandler().getWalls().stream().filter(sw -> sw.getName().equalsIgnoreCase(args.get(0))).forEach(sw -> sw.offSet(Integer.parseInt(args.get(1))));
             } catch (Exception ex) {
                 sender.sendMessage(ChatColor.RED + "Error: " + ex.getMessage());
                 ex.printStackTrace();

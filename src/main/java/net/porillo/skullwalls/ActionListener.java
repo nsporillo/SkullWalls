@@ -38,7 +38,7 @@ public class ActionListener implements Listener {
                 String name = this.hasOwner(skull) ? skull.getOwner() : this.def;
                 if (!this.hasTool(p)) {
                     if (p.isSneaking()) {
-                        if (Utils.isSlot(b)) {
+                        if (SkullWalls.getWallHandler().getWallFromBlock(b) != null) {
                             if (p.hasPermission(perm) || p.isOp()) {
                                 p.sendMessage(this.des.replace("#", name));
                                 // Disable skull?
@@ -47,7 +47,7 @@ public class ActionListener implements Listener {
                                 p.sendMessage(this.noperm);
                             }
                         }
-                    } else if (Utils.isSlot(b)) {
+                    } else if (SkullWalls.getWallHandler().getWallFromBlock(b) != null) {
                         this.sw.getActionWorker().queueQuery(p, name);
                         if (p.hasPermission(perm)) {
                             e.setCancelled(true);
@@ -64,15 +64,14 @@ public class ActionListener implements Listener {
                     e.setCancelled(true);
                     ItemStack s = p.getItemInHand();
                     this.onBlockDamage(new BlockDamageEvent(p, b, s, false));
-                    if (Utils.isSlot(b)) {
+                    if (SkullWalls.getWallHandler().getWallFromBlock(b) != null) {
                         p.sendMessage(RED + "Block selected is already a part of a skull wall");
                         p.sendMessage(RED + "Overlapping walls will not perform as expected!");
                     }
                 }
             }
-        } else if (this.sw.getConfiguration().isProtecting()
-                && e.getBlock().getType() == Material.SKULL && !p.hasPermission(perm))
-            e.setCancelled(Utils.check(b, p, this.noperm));
+        } else if (this.sw.getConfiguration().isProtecting() && e.getBlock().getType() == Material.SKULL && !p.hasPermission(perm))
+            e.setCancelled(SkullWalls.getWallHandler().hasPermission(b, p, this.noperm));
     }
 
     @EventHandler(priority = EventPriority.LOWEST)

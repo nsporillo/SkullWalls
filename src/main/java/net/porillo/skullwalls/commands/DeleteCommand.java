@@ -7,6 +7,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
+import java.util.Set;
 
 public class DeleteCommand extends BaseCommand {
 
@@ -25,8 +26,9 @@ public class DeleteCommand extends BaseCommand {
             SkullWall sw = null;
 
             try {
-                Serializer.save(SkullWalls.getWalls());
-                for (SkullWall w : SkullWalls.getWalls()) {
+                Set<SkullWall> wallsCopy = SkullWalls.getWallHandler().getReadOnlyWalls();
+                Serializer.save(wallsCopy);
+                for (SkullWall w : wallsCopy) {
                     if (w.getName().equalsIgnoreCase(args.get(0))) {
                         sw = w;
                         break;
@@ -34,9 +36,9 @@ public class DeleteCommand extends BaseCommand {
                 }
 
                 if (sw != null) {
-                    SkullWalls.getWalls().remove(sw);
+                    SkullWalls.getWallHandler().remove(sw);
                     Serializer.delete(sw);
-                    this.plugin.reload();
+                    this.plugin.reload(); //TODO: this is dumb.
                 } else {
                     throw new RuntimeException("Wall does not exist!");
                 }

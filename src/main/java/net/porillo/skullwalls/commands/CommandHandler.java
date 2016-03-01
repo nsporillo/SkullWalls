@@ -34,7 +34,7 @@ public class CommandHandler {
 
     public void runCommand(CommandSender sender, String label, String[] args) {
         if (args.length == 1 && args[0].equals("test")) {
-            Iterator localIterator = SkullWalls.getWalls().iterator();
+            Iterator localIterator = SkullWalls.getWallHandler().getReadOnlyWalls().iterator();
             if (localIterator.hasNext()) {
                 SkullWall sw = (SkullWall) localIterator.next();
                 sender.sendMessage(BLUE + "Wall: " + sw.getName());

@@ -34,13 +34,14 @@ public class CreateCommand extends BaseCommand {
             try {
                 type = WallType.valueOf(args.get(1).toUpperCase());
                 wall = this.plugin.getCuboider().createWall((Player) sender, type, capitalize(args.get(0)));
-                for (SkullWall w : SkullWalls.getWalls()) {
+                for (SkullWall w : SkullWalls.getWallHandler().getReadOnlyWalls()) {
                     if (Objects.equals(wall.getName(), w.getName())) {
                         sender.sendMessage(RED + "Error: That wall already exists!");
                         return;
                     }
                 }
-                SkullWalls.getWalls().add(wall);
+
+                SkullWalls.getWallHandler().add(wall);
             } catch (NullPointerException ex) {
                 sender.sendMessage(RED + "Error: Your cuboid is not complete!");
                 return;

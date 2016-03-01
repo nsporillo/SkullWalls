@@ -66,27 +66,4 @@ public class Utils {
         x.addAll(z);
         return x;
     }
-
-    public static boolean check(Block b, Player p, String noperm) {
-        for (SkullWall wall : SkullWalls.getWalls()) {
-            for (SkullSlot s : wall.getSlots()) {
-                if (s.getBlock().equals(b)) {
-                    p.sendMessage(noperm);
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    public static boolean isSlot(Block b) {
-        for (SkullWall wall : SkullWalls.getWalls()) {
-            for (SkullSlot s : wall.getSlots()) {
-                if (s.getBlock().getLocation().equals(b.getLocation())) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
 }

@@ -23,7 +23,7 @@ public class UpdateCommand extends BaseCommand {
         } else if (args.size() == 1) {
             String arg = args.get(0);
 
-            SkullWalls.getWalls().stream().filter(w -> w.getName().equalsIgnoreCase(arg) || arg.equalsIgnoreCase("all")).forEach(w -> w.updateWall(null));
+            SkullWalls.getWallHandler().getWalls().stream().filter(w -> w.getName().equalsIgnoreCase(arg) || arg.equalsIgnoreCase("all")).forEach(w -> w.updateWall(null));
 
             sender.sendMessage(GREEN + "Attempting to update " + GOLD + arg + "'s" + GREEN + " heads");
         }

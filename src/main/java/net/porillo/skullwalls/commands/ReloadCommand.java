@@ -6,6 +6,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
+import java.util.Set;
 
 public class ReloadCommand extends BaseCommand {
 
@@ -22,7 +23,8 @@ public class ReloadCommand extends BaseCommand {
             sender.sendMessage(ChatColor.BLUE + "Reloading configuration and walls!");
             this.plugin.getConfiguration().reload();
             this.plugin.reload();
-            for (SkullWall w : SkullWalls.getWalls())
+
+            for (SkullWall w : SkullWalls.getWallHandler().getReadOnlyWalls())
                 w.updateWall(SkullWalls.getOnlinePlayers());
         }
     }

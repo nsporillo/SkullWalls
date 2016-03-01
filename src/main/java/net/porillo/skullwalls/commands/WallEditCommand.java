@@ -27,8 +27,8 @@ public class WallEditCommand extends BaseCommand {
             sender.sendMessage(RED + "Must specify a valid option {trans, radius, world}");
         else if (args.size() > 1)
             try {
-                Serializer.save(SkullWalls.getWalls());
-                for (SkullWall w : SkullWalls.getWalls())
+                Serializer.save(SkullWalls.getWallHandler().getWalls());
+                for (SkullWall w : SkullWalls.getWallHandler().getWalls())
                     if (w.getName().equalsIgnoreCase(args.get(0))) {
                         if (args.get(1).equalsIgnoreCase("transparency") || args.get(1).equalsIgnoreCase("trans")) {
                             if (args.size() == 3) {

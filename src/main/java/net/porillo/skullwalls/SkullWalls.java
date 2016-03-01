@@ -1,5 +1,6 @@
 package net.porillo.skullwalls;
 
+import lombok.Getter;
 import net.porillo.skullwalls.commands.CommandHandler;
 import net.porillo.skullwalls.config.YamlConfig;
 import net.porillo.skullwalls.walls.SkullWall;
@@ -9,50 +10,34 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class SkullWalls extends JavaPlugin {
-    private static Set<SkullWall> walls = new HashSet<>();
-    private CommandHandler commands;
-    private ActionWorker aworker;
-    private YamlConfig config;
-    private Cuboider sesHandler;
+
+    @Getter private static WallHandler wallHandler;
+    @Getter private CommandHandler commandHandler;
+    @Getter private ActionWorker actionWorker;
+    @Getter private YamlConfig configuration;
+    @Getter private Cuboider cuboider;
 
     @Override
     public void onDisable() {
-        Serializer.save(walls);
-        walls = null;
+        Serializer.save(wallHandler.getWalls());
+        wallHandler = null;
     }
 
     @Override
     public void onEnable() {
-        this.commands = new CommandHandler(this);
-        this.sesHandler = new Cuboider();
-        this.aworker = new ActionWorker(this);
-        this.config = new YamlConfig(this, "config.yml");
+        wallHandler = new WallHandler();
+        this.commandHandler = new CommandHandler(this);
+        this.cuboider = new Cuboider();
+        this.actionWorker = new ActionWorker(this);
+        this.configuration = new YamlConfig(this, "config.yml");
         Bukkit.getPluginManager().registerEvents(new ActionListener(this), this);
-        autoUpdate(this.config.getUpdateInterval());
-        walls = Serializer.load();
-        struct();
-    }
-
-    public static Set<SkullWall> getWalls() {
-        return walls;
-    }
-
-    public ActionWorker getActionWorker() {
-        return this.aworker;
-    }
-
-    public YamlConfig getConfiguration() {
-        return this.config;
-    }
-
-    public Cuboider getCuboider() {
-        return this.sesHandler;
+        autoUpdate(this.configuration.getUpdateInterval());
+        wallHandler.setWalls(Serializer.load());
+        updateAllWalls();
     }
 
     public void log(String info) {
@@ -61,19 +46,18 @@ public class SkullWalls extends JavaPlugin {
 
     @Override
     public boolean onCommand(CommandSender s, Command c, String l, String[] a) {
-        this.commands.runCommand(s, l, a);
+        this.commandHandler.runCommand(s, l, a);
         return true;
     }
 
     public void reload() {
-        Serializer.save(walls);
-        walls.clear();
-        walls = Serializer.load();
-        struct();
+        Serializer.save(wallHandler.getWalls());
+        wallHandler.setWalls(Serializer.load());
+        updateAllWalls();
     }
 
-    public void struct() {
-        for (SkullWall w : getWalls()) {
+    public void updateAllWalls() {
+        for (SkullWall w : wallHandler.getWalls()) {
             w.updateWall(getOnlinePlayers());
         }
     }
@@ -84,9 +68,6 @@ public class SkullWalls extends JavaPlugin {
 
     public void autoUpdate(int interval) {
         log("All walls will update every " + interval + " seconds");
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
-            for (SkullWall w : SkullWalls.getWalls())
-                w.updateWall(SkullWalls.getOnlinePlayers());
-        }, 20L, interval * 20);
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, this::updateAllWalls, 20L, interval * 20);
     }
 }
