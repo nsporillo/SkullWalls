@@ -23,10 +23,10 @@ public class WallEditCommand extends BaseCommand {
         if (args.size() == 0)
             sender.sendMessage(RED + "Specify the name of the wall");
         else if (args.size() == 1)
-            sender.sendMessage(RED + "Must specify a valid option {trans, radius, world}");
+            sender.sendMessage(RED + "Must provide option \"trans\"");
         else if (args.size() > 1)
             try {
-                Serializer.save(SkullWalls.getWallHandler().getWalls());
+                SkullWalls.getWallHandler().saveWalls();
                 for (Wall w : SkullWalls.getWallHandler().getWalls())
                     if (w.getName().equalsIgnoreCase(args.get(0))) {
                         if (args.get(1).equalsIgnoreCase("transparency") || args.get(1).equalsIgnoreCase("trans")) {

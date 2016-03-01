@@ -26,7 +26,6 @@ public class DeleteCommand extends BaseCommand {
 
             try {
                 Set<Wall> wallsCopy = SkullWalls.getWallHandler().getReadOnlyWalls();
-                Serializer.save(wallsCopy);
                 for (Wall w : wallsCopy) {
                     if (w.getName().equalsIgnoreCase(args.get(0))) {
                         sw = w;
@@ -36,8 +35,7 @@ public class DeleteCommand extends BaseCommand {
 
                 if (sw != null) {
                     SkullWalls.getWallHandler().remove(sw);
-                    Serializer.delete(sw);
-                    this.plugin.reload(); //TODO: this is dumb.
+                    plugin.reload(); // saves, loads, then resets all walls
                 } else {
                     throw new RuntimeException("Wall does not exist!");
                 }
