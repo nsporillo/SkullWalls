@@ -20,7 +20,7 @@ public class SkullSlot implements Serializable {
 
     protected SkullSlot(SkullWall parent, Block block) {
         this.parent = parent;
-        this.loc = new SerialLocation(block.getWorld().getName(), block.getX(), block.getY(), block.getZ());
+        this.loc = new SerialLocation(block);
         this.parentBlock = block;
         this.visible = true;
 
@@ -94,17 +94,6 @@ public class SkullSlot implements Serializable {
         return this.skull;
     }
 
-    public static SkullSlot getAt(Location l) {
-        for (SkullWall wall : SkullWalls.getWalls()) {
-            for (SkullSlot s : wall.getSlots()) {
-                if (s.getBlock().getLocation().equals(l)) {
-                    return s;
-                }
-            }
-        }
-        return null;
-    }
-
     public boolean isSkull() {
         return this.getBlock().getType() == Material.SKULL;
     }
@@ -132,7 +121,6 @@ public class SkullSlot implements Serializable {
         SkullSlot skullSlot = (SkullSlot) o;
 
         return loc.equals(skullSlot.loc);
-
     }
 
     @Override

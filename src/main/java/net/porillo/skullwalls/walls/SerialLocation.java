@@ -2,6 +2,7 @@ package net.porillo.skullwalls.walls;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.bukkit.block.Block;
 
 import java.io.Serializable;
 
@@ -14,6 +15,10 @@ public class SerialLocation implements Serializable {
     private final int x;
     private final int y;
     private final int z;
+
+    public SerialLocation(Block block) {
+        this(block.getWorld().getName(), block.getX(), block.getY(), block.getZ());
+    }
 
     @Override
     public boolean equals(Object o) {

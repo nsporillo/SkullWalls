@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class YamlConfig extends YamlLoader {
 
-    @Getter private Map<Integer, Action> actionz;
+    @Getter private Map<Integer, Action> actions;
     @Getter private boolean protecting;
     @Getter private String clickMessage;
     @Getter private String name;
@@ -20,12 +20,12 @@ public class YamlConfig extends YamlLoader {
     public YamlConfig(SkullWalls plugin, String fileName) {
         super(plugin, fileName);
         super.saveIfNotExist();
-        this.actionz = new HashMap<>();
+        this.actions = new HashMap<>();
         super.load();
     }
 
     public Map<Integer, Action> getActionMap() {
-        return this.actionz;
+        return this.actions;
     }
 
     @Override
@@ -44,7 +44,7 @@ public class YamlConfig extends YamlLoader {
             int tool = cs.getInt("Tool");
             String cmd = cs.getString("Command");
             String perm = cs.getString("Permission");
-            this.actionz.put(tool, new Action(cs.getName(), cmd, perm, tool));
+            this.actions.put(tool, new Action(cs.getName(), cmd, perm, tool));
         }
     }
 
