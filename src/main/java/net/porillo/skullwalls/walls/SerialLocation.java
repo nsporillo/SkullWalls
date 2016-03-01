@@ -17,4 +17,24 @@ public class SerialLocation implements Serializable {
         this.y = y;
         this.z = z;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        SerialLocation that = (SerialLocation) o;
+
+        return x == that.x && y == that.y && z == that.z && world.equals(that.world);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = world.hashCode();
+        result = 31 * result + x;
+        result = 31 * result + y;
+        result = 31 * result + z;
+        return result;
+    }
 }

@@ -12,21 +12,22 @@ import java.io.Serializable;
 
 public class SkullSlot implements Serializable {
     private static final long serialVersionUID = 8074488926217790524L;
-    private transient Block b;
+    private transient Block parentBlock;
     private transient Skull skull;
     private SkullWall parent;
     private SerialLocation loc;
     private boolean visible;
 
-    protected SkullSlot(SkullWall parent, Block b) {
+    protected SkullSlot(SkullWall parent, Block block) {
         this.parent = parent;
-        this.loc = new SerialLocation(b.getWorld(), b.getX(), b.getY(), b.getZ());
-        this.b = b;
+        this.loc = new SerialLocation(block.getWorld(), block.getX(), block.getY(), block.getZ());
+        this.parentBlock = block;
         this.visible = true;
-        try {
-            this.skull = (Skull) b.getState();
-        } catch (Exception ex) {
 
+        try {
+            this.skull = (Skull) block.getState();
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
 
@@ -48,14 +49,17 @@ public class SkullSlot implements Serializable {
         if (this.isVisible()) {
             return;
         }
+
         this.visible = true;
         this.getBlock().setType(Material.SKULL);
+
         try {
             this.skull = (Skull) this.getBlock().getState();
         } catch (Exception ex) {
             System.err.println("Error casting skull to slot!");
             return;
         }
+
         this.skull.setSkullType(SkullType.PLAYER);
         this.skull.setOwner("");
         this.skull.update();
@@ -79,17 +83,14 @@ public class SkullSlot implements Serializable {
     }
 
     public boolean hasOwner() {
-        if (!this.isVisible()) {
-            return false;
-        }
-        return !this.getSkull().getOwner().equals("");
+        return this.isVisible() && !this.getSkull().getOwner().equals("");
     }
 
     public Skull getSkull() {
-        Block b = this.getBlock();
         if (this.skull == null) {
-            this.skull = (Skull) b.getState();
+            this.skull = (Skull) this.getBlock().getState();
         }
+
         return this.skull;
     }
 
@@ -113,13 +114,29 @@ public class SkullSlot implements Serializable {
     }
 
     public Block getBlock() {
-        if (this.b == null) {
-            this.b = Bukkit.getWorld(this.loc.world).getBlockAt(this.loc.x, this.loc.y, this.loc.z);
+        if (this.parentBlock == null) {
+            this.parentBlock = Bukkit.getWorld(this.loc.world).getBlockAt(this.loc.x, this.loc.y, this.loc.z);
         }
-        return this.b;
+        return this.parentBlock;
     }
 
     public SkullWall getParent() {
         return this.parent;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        SkullSlot skullSlot = (SkullSlot) o;
+
+        return loc.equals(skullSlot.loc);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return loc.hashCode();
     }
 }

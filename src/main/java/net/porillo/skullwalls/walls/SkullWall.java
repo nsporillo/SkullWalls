@@ -13,9 +13,10 @@ import java.util.List;
 import java.util.Set;
 
 public class SkullWall implements Serializable {
+
     private static final long serialVersionUID = 8086068912212564853L;
-    private transient List<String> knownBanned = new ArrayList<String>();
-    private transient List<String> cachedPlayers = new ArrayList<String>();
+    private transient List<String> knownBanned = new ArrayList<>();
+    private transient List<String> cachedPlayers = new ArrayList<>();
     protected transient World worldObj;
     protected String world;
     protected WallType type;
@@ -32,8 +33,10 @@ public class SkullWall implements Serializable {
         this.worldObj = world;
         this.world = this.worldObj.getName();
         this.bounds = bounds;
-        this.list = new HashSet<String>();
+        this.list = new HashSet<>();
+
         Utils.gen(this, bounds);
+
         if (type == WallType.BANNED) {
             this.banUpdate();
         } else {
@@ -56,8 +59,8 @@ public class SkullWall implements Serializable {
         return null;
     }
 
-    private List<String> a(List<String> players) {
-        List<String> toUse = null;
+    private List<String> getCachedNames(List<String> players) {
+        List<String> toUse;
         if (players == null) {
             toUse = this.cachedPlayers;
         } else {
@@ -71,10 +74,10 @@ public class SkullWall implements Serializable {
         if (this.slots == null) {
             Utils.gen(this, this.bounds);
         }
-        for (SkullSlot slot : this.slots) {
-            slot.validate();
-        }
-        for (String player : a(players)) {
+
+        this.slots.forEach(SkullSlot::validate); // validate each slot first
+
+        for (String player : getCachedNames(players)) {
             SkullSlot s = this.getNextAvailable();
             if (s == null)
                 continue;
@@ -84,8 +87,7 @@ public class SkullWall implements Serializable {
             }
             Player p = Bukkit.getPlayerExact(player);
             if (this.type == WallType.CUSTOM) {
-                if (p.hasPermission("skullwalls.wall." + this.name)
-                        || this.list.contains(p.getName()))
+                if (p.hasPermission("skullwalls.wall." + this.name) || this.list.contains(p.getName()))
                     s.setOwner(player);
             } else if (this.type == WallType.BANNED) {
                 if (this.knownBanned == null) {
@@ -95,6 +97,7 @@ public class SkullWall implements Serializable {
                     this.banUpdate();
             }
         }
+
         this.verifyState();
     }
 

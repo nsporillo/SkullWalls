@@ -9,13 +9,14 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.lang.Double.NaN;
 
 public class Utils {
 
     public static void gen(SkullWall w, int[] b) {
-        w.slots = new ArrayList<SkullSlot>();
+        w.slots = new ArrayList<>();
         for (int x = Math.min(b[0], b[3]); x <= Math.max(b[0], b[3]); x++) {
             for (int y = Math.min(b[1], b[4]); y <= Math.max(b[1], b[4]); y++) {
                 for (int z = Math.min(b[2], b[5]); z <= Math.max(b[2], b[5]); z++) {
@@ -26,20 +27,11 @@ public class Utils {
     }
 
     public static List<Player> getAllInRadius(SkullWall wall, double radius) {
-        List<Player> players = new ArrayList<Player>();
-        for (Player p : Bukkit.getOnlinePlayers()) {
-            if (Utils.getDistanceFromCenter(wall, p) < radius) {
-                players.add(p);
-            }
-        }
-        return players;
+        return Bukkit.getOnlinePlayers().stream().filter(p -> Utils.getDistanceFromCenter(wall, p) < radius).collect(Collectors.toList());
     }
 
     public static boolean isInRadius(Player p, SkullWall wall, double radius) {
-        if (Utils.getDistanceFromCenter(wall, p) > radius) {
-            return false;
-        }
-        return true;
+        return Utils.getDistanceFromCenter(wall, p) <= radius;
     }
 
     public static String bind(int[] bounds) {
@@ -49,7 +41,7 @@ public class Utils {
 
     public static double getDistanceFromCenter(SkullWall wall, Player p) {
         int slots = wall.getSlots().size();
-        int c = 0;
+        int c;
         if (slots % 2 == 0)
             c = slots / 2;
         else {
@@ -71,9 +63,9 @@ public class Utils {
     }
 
     public static List<SkullSlot> offset(List<SkullSlot> l, int i) {
-        List<SkullSlot> x = new ArrayList<SkullSlot>();
-        List<SkullSlot> y = new ArrayList<SkullSlot>(l.subList(i, l.size()));
-        List<SkullSlot> z = new ArrayList<SkullSlot>(l.subList(0, i > 1 ? i : 1));
+        List<SkullSlot> x = new ArrayList<>();
+        List<SkullSlot> y = new ArrayList<>(l.subList(i, l.size()));
+        List<SkullSlot> z = new ArrayList<>(l.subList(0, i > 1 ? i : 1));
         x.addAll(y);
         x.addAll(z);
         return x;
