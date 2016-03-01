@@ -9,15 +9,13 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class SkullWalls extends JavaPlugin {
-    private static Set<SkullWall> walls = new HashSet<SkullWall>();
-    private static boolean van;
-    private static boolean afk;
+    private static Set<SkullWall> walls = new HashSet<>();
     private CommandHandler commands;
     private ActionWorker aworker;
     private YamlConfig config;
@@ -26,7 +24,7 @@ public class SkullWalls extends JavaPlugin {
     @Override
     public void onDisable() {
         Serializer.save(walls);
-        destruct();
+        walls = null;
     }
 
     @Override
@@ -43,10 +41,6 @@ public class SkullWalls extends JavaPlugin {
 
     public static Set<SkullWall> getWalls() {
         return walls;
-    }
-
-    public void destruct() {
-        walls = null;
     }
 
     public ActionWorker getActionWorker() {
@@ -85,20 +79,14 @@ public class SkullWalls extends JavaPlugin {
     }
 
     public static List<String> getOnlinePlayers() {
-        List<String> players = new ArrayList<String>();
-        for (Player p : Bukkit.getOnlinePlayers()) {
-            players.add(p.getName());
-        }
-        return players;
+        return Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
     }
 
     public void autoUpdate(int interval) {
         log("All walls will update every " + interval + " seconds");
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
-            public void run() {
-                for (SkullWall w : SkullWalls.getWalls())
-                    w.updateWall(SkullWalls.getOnlinePlayers());
-            }
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
+            for (SkullWall w : SkullWalls.getWalls())
+                w.updateWall(SkullWalls.getOnlinePlayers());
         }, 20L, interval * 20);
     }
 }
