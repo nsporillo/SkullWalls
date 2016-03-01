@@ -1,14 +1,16 @@
 Skullwalls
 ==========
 
-Skullwalls allows you to create unique online player head walls.
+The idea of SkullWalls is to integrate a physical, visual player face "board" which is interactive. 
 
-Walls update on an configurable interval, or as needed.
+Players can click the heads to see who's skin it is displaying. 
 
-You can create online walls which list the head every player that is online.
-You can create banned walls which lists the head every banned player.
-You can create radius walls that lists the head of every player within a defined radius of the wall.
+Administrators can configure the plugin to update regularly (in seconds). 
 
-Skullwalls supports AFK and vanished players, using Essentials and VanishNoPacket API. 
+Administrators can also integrate in custom "action" bindings to tools!
 
-Skullwalls is currently heavily integrated with the Bukkit API. Revisions are needed to decouple the core functionality so that this project can be easily ported to new server platforms in the future. 
+You can bind any tool to execute a command with a player as the parameter in the config file. 
+
+An excellent tutorial of how to use the plugin can be found here (thanks to Variation Vault):
+
+[![Tutorial](http://img.youtube.com/vi/VN-A9fVp-LU/hqdefault.jpg)](https://youtu.be/VN-A9fVp-LU "Tutorial")
