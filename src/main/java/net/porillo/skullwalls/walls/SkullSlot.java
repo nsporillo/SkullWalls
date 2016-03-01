@@ -20,7 +20,7 @@ public class SkullSlot implements Serializable {
 
     protected SkullSlot(SkullWall parent, Block block) {
         this.parent = parent;
-        this.loc = new SerialLocation(block.getWorld(), block.getX(), block.getY(), block.getZ());
+        this.loc = new SerialLocation(block.getWorld().getName(), block.getX(), block.getY(), block.getZ());
         this.parentBlock = block;
         this.visible = true;
 
