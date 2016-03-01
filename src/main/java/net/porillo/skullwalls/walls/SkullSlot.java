@@ -115,7 +115,7 @@ public class SkullSlot implements Serializable {
 
     public Block getBlock() {
         if (this.parentBlock == null) {
-            this.parentBlock = Bukkit.getWorld(this.loc.world).getBlockAt(this.loc.x, this.loc.y, this.loc.z);
+            this.parentBlock = Bukkit.getWorld(loc.getWorld()).getBlockAt(loc.getX(), loc.getY(), loc.getZ());
         }
         return this.parentBlock;
     }

@@ -1,21 +1,23 @@
 package net.porillo.skullwalls.walls;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.bukkit.World;
 
 import java.io.Serializable;
 
+@Data
+@AllArgsConstructor
 public class SerialLocation implements Serializable {
+
     private static final long serialVersionUID = -645101824628385024L;
-    public String world;
-    public int x;
-    public int y;
-    public int z;
+    private String world;
+    private int x;
+    private int y;
+    private int z;
 
     public SerialLocation(World w, int x, int y, int z) {
-        this.world = w.getName();
-        this.x = x;
-        this.y = y;
-        this.z = z;
+        this(w.getName(), x, y, z);
     }
 
     @Override
@@ -26,7 +28,6 @@ public class SerialLocation implements Serializable {
         SerialLocation that = (SerialLocation) o;
 
         return x == that.x && y == that.y && z == that.z && world.equals(that.world);
-
     }
 
     @Override
