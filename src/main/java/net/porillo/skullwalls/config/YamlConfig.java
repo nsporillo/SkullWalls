@@ -1,5 +1,6 @@
 package net.porillo.skullwalls.config;
 
+import lombok.Getter;
 import net.porillo.skullwalls.Action;
 import net.porillo.skullwalls.SkullWalls;
 import org.bukkit.configuration.ConfigurationSection;
@@ -9,19 +10,17 @@ import java.util.Map;
 
 public class YamlConfig extends YamlLoader {
 
-    private Map<Integer, Action> actionz;
-    private boolean protect;
-    private boolean showvan;
-    private boolean showafk;
-    private String click;
-    private String name;
-    private int tool;
-    private int updateint;
+    @Getter private Map<Integer, Action> actionz;
+    @Getter private boolean protecting;
+    @Getter private String clickMessage;
+    @Getter private String name;
+    @Getter private int tool;
+    @Getter private int updateInterval;
 
     public YamlConfig(SkullWalls plugin, String fileName) {
         super(plugin, fileName);
         super.saveIfNotExist();
-        this.actionz = new HashMap<Integer, Action>();
+        this.actionz = new HashMap<>();
         super.load();
     }
 
@@ -33,19 +32,19 @@ public class YamlConfig extends YamlLoader {
     protected void loadKeys() {
         this.update();
         this.name = this.config.getString("General.Default-Name", "Steve");
-        this.click = this.config.getString("Messages.Click", "");
+        this.clickMessage = this.config.getString("Messages.Click", "");
         this.tool = this.config.getInt("General.Cuboid-Tool", 269);
-        this.protect = this.config.getBoolean("General.Protect-Walls", true);
-        this.updateint = this.config.getInt("General.Update-Interval", 10);
-        this.showvan = this.config.getBoolean("General.Show-Vanished", false);
-        this.showafk = this.config.getBoolean("General.Show-AFK", true);
+        this.protecting = this.config.getBoolean("General.Protect-Walls", true);
+        this.updateInterval = this.config.getInt("General.Update-Interval", 10);
+
         ConfigurationSection actions = super.getYaml().getConfigurationSection("Actions");
+
         for (String action : actions.getKeys(false)) {
             ConfigurationSection cs = actions.getConfigurationSection(action);
             int tool = cs.getInt("Tool");
             String cmd = cs.getString("Command");
             String perm = cs.getString("Permission");
-            this.actionz.put(Integer.valueOf(tool), new Action(cs.getName(), cmd, perm, tool));
+            this.actionz.put(tool, new Action(cs.getName(), cmd, perm, tool));
         }
     }
 
@@ -56,49 +55,20 @@ public class YamlConfig extends YamlLoader {
 
     public void update() {
         boolean updated = false;
+
         if (this.config.get("General.Show-Vanished") == null) {
-            this.config.set("General.Show-Vanished", Boolean.valueOf(false));
+            this.config.set("General.Show-Vanished", false);
             updated = true;
         }
+
         if (this.config.get("General.Show-AFK") == null) {
-            this.config.set("General.Show-AFK", Boolean.valueOf(true));
+            this.config.set("General.Show-AFK", true);
             updated = true;
         }
+
         if (updated) {
             this.plugin.log("Updated config for latest changes!");
             super.saveConfig();
         }
-    }
-
-    public boolean isProtecting() {
-        return this.protect;
-    }
-
-    public boolean isShowingVanished() {
-        return this.showvan;
-    }
-
-    public boolean isShowingAFK() {
-        return this.showafk;
-    }
-
-    public String getClickMessage() {
-        return this.click;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public int getTool() {
-        return this.tool;
-    }
-
-    public int getUpdateInterval() {
-        return this.updateint;
-    }
-
-    public Map<Integer, Action> getActions() {
-        return this.actionz;
     }
 }
