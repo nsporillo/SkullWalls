@@ -57,14 +57,10 @@ public class Wall {
     }
 
     private List<String> getCachedNames(List<String> players) {
-        List<String> toUse;
-        if (players == null) {
-            toUse = this.cachedPlayers;
-        } else {
-            toUse = players;
+        if (players != null) {
+            this.cachedPlayers = players;
         }
-        this.cachedPlayers = toUse;
-        return toUse;
+        return cachedPlayers;
     }
 
     public void updateWall(List<String> players) {

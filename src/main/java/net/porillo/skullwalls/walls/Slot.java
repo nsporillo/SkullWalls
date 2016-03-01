@@ -34,7 +34,6 @@ public class Slot {
             this.skull.setOwner("");
             this.skull.update();
         } else if (!this.isSkull() && this.isVisible()) {
-            System.out.println("Slot isnt a skull but is visible!");
             this.visible = false;
             this.appear();
         }
