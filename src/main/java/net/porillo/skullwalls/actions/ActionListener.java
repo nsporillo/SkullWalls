@@ -20,7 +20,7 @@ public class ActionListener implements Listener {
     private final SkullWalls sw;
     private final String def;
     private final String noperm = RED + "Permission to destroy skull is denied";
-    private final String perm = "skullwalls.break.walls";
+    private final String perm = "skullwalls.break";
     private final String des = RED + "Destroyed #'s skull";
 
     public ActionListener(SkullWalls sw) {

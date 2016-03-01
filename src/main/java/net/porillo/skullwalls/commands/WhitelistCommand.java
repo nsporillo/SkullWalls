@@ -14,7 +14,7 @@ public class WhitelistCommand extends BaseCommand {
         super(plugin);
         super.setName("whitelist");
         super.addUsage("[wall]", "[player]", "Toggles whitelist state");
-        super.setPermission("skullwalls.recalculate");
+        super.setPermission("skullwalls.whitelist");
         super.setRequiredArgs(1);
         super.setConsoleOnly(false);
     }

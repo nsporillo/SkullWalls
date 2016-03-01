@@ -29,7 +29,7 @@ public class ActionWorker {
 
     public void executeCuboid(BlockDamageEvent e) {
         Player p = e.getPlayer();
-        if (p.hasPermission("skullwalls.wand.use")) {
+        if (p.hasPermission("skullwalls.wand")) {
             Block b = e.getBlock();
             this.skws.getCuboidHandler().add(p, b);
             int step = this.skws.getCuboidHandler().getStep(p);
