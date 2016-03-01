@@ -2,7 +2,7 @@ name: SkullWalls
 author: Nick Porillo 
 main: net.porillo.skullwalls.SkullWalls
 website: http://porillo.net
-version: 1.6.3
+version: 1.7
 
 commands:
     skull:
