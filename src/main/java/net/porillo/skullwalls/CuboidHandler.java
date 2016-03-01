@@ -8,16 +8,18 @@ import org.bukkit.entity.Player;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Cuboider {
+public class CuboidHandler {
+
     private Map<String, Session> sessions = new HashMap<>();
 
     public void add(Player player, Block b) {
         if (this.sessions.containsKey(player.getName())) {
             Session s = this.sessions.get(player.getName());
-            if (s.one == null)
+            if (s.one == null) {
                 s.setOne(b);
-            else
+            } else {
                 s.setTwo(b);
+            }
         } else {
             Session ses = new Session();
             ses.setOne(b);
@@ -29,18 +31,16 @@ public class Cuboider {
         this.sessions.remove(player.getName());
     }
 
-    public SkullWall createWall(Player p, WallType type, String name) {
+    public SkullWall createWall(Player player, WallType type, String name) {
         SkullWall wall = null;
-        if (this.sessions.containsKey(p.getName())) {
-            Session s = this.sessions.get(p.getName());
+        if (this.sessions.containsKey(player.getName())) {
+            Session s = this.sessions.get(player.getName());
             if (s.isComplete()) {
-                int[] b = {s.one.getX(), s.one.getY(), s.one.getZ(), s.two.getX(), s.two.getY(),
-                        s.two.getZ()};
+                int[] b = {s.one.getX(), s.one.getY(), s.one.getZ(), s.two.getX(), s.two.getY(), s.two.getZ()};
                 wall = new SkullWall(type, name, s.one.getWorld(), b);
-            } else {
-                return null;
             }
-            this.sessions.remove(p.getName());
+
+            clear(player);
         }
         return wall;
     }
@@ -52,9 +52,8 @@ public class Cuboider {
                 return 0;
             if (s.one != null && s.two == null)
                 return 1;
-            if (s.one != null) {
+            if (s.one != null)
                 return 2;
-            }
         }
         return -1;
     }
