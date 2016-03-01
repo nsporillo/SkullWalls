@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import static java.lang.Double.NaN;
@@ -42,7 +43,7 @@ public class WallHandler {
 
     public void saveWalls() {
         try {
-            FileUtils.write(wallsFile, SkullWalls.getGson().toJson(wallsFile));
+            FileUtils.write(wallsFile, SkullWalls.getGson().toJson(wallStore));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -58,6 +59,15 @@ public class WallHandler {
         getWalls().add(wall);
 
         saveWalls();
+    }
+
+    public boolean exists(Wall wall) {
+        for (Wall w : getWalls()) {
+            if (Objects.equals(w.getName(), wall.getName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean hasPermission(Block block, Player player, String message) {
