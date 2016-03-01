@@ -22,11 +22,11 @@ import java.util.stream.Collectors;
 public class SkullWalls extends JavaPlugin {
 
     @Getter private static Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
+    @Getter private static CuboidHandler cuboidHandler;
     @Getter private static WallHandler wallHandler;
     @Getter private CommandHandler commandHandler;
     @Getter private ActionWorker actionWorker;
     @Getter private YamlConfig configuration;
-    @Getter private CuboidHandler cuboidHandler;
 
     @Override
     public void onDisable() {
@@ -37,8 +37,8 @@ public class SkullWalls extends JavaPlugin {
     @Override
     public void onEnable() {
         wallHandler = new WallHandler();
+        cuboidHandler = new CuboidHandler();
         this.commandHandler = new CommandHandler(this);
-        this.cuboidHandler = new CuboidHandler();
         this.actionWorker = new ActionWorker(this);
         this.configuration = new YamlConfig(this, "config.yml");
         Bukkit.getPluginManager().registerEvents(new ActionListener(this), this);

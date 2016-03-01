@@ -1,17 +1,17 @@
 package net.porillo.skullwalls.cuboid;
 
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.block.Block;
 
+@Data
+@RequiredArgsConstructor
 public class Session {
-    public Block one;
+    public final Block one;
     public Block two;
 
     public boolean isComplete() {
         return this.one != null && this.two != null;
-    }
-
-    public void setOne(Block one) {
-        this.one = one;
     }
 
     public void setTwo(Block two) {

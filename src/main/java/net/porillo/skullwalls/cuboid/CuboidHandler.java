@@ -15,26 +15,20 @@ public class CuboidHandler {
     public void add(Player player, Block b) {
         if (this.sessions.containsKey(player.getName())) {
             Session s = this.sessions.get(player.getName());
-            if (s.one == null) {
-                s.setOne(b);
-            } else {
-                s.setTwo(b);
-            }
+            s.setTwo(b);
         } else {
-            Session ses = new Session();
-            ses.setOne(b);
-            this.sessions.put(player.getName(), ses);
+            this.sessions.put(player.getName(), new Session(b));
         }
     }
 
-    public void clear(Player player) {
-        this.sessions.remove(player.getName());
+    public void clear(String player) {
+        this.sessions.remove(player);
     }
 
-    public Wall createWall(Player player, WallType type, String name) {
+    public Wall create(String player, WallType type, String name) {
         Wall wall = null;
-        if (this.sessions.containsKey(player.getName())) {
-            Session s = this.sessions.get(player.getName());
+        if (this.sessions.containsKey(player)) {
+            Session s = this.sessions.get(player);
             if (s.isComplete()) {
                 int[] b = {s.one.getX(), s.one.getY(), s.one.getZ(), s.two.getX(), s.two.getY(), s.two.getZ()};
                 wall = new Wall(type, name, s.one.getWorld(), b);

@@ -4,10 +4,8 @@ import net.porillo.skullwalls.SkullWalls;
 import net.porillo.skullwalls.walls.Wall;
 import net.porillo.skullwalls.walls.WallType;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import java.util.List;
-import java.util.Objects;
 
 import static org.apache.commons.lang.WordUtils.capitalize;
 import static org.bukkit.ChatColor.*;
@@ -33,16 +31,13 @@ public class CreateCommand extends BaseCommand {
 
             try {
                 type = WallType.valueOf(args.get(1).toUpperCase());
-                wall = this.plugin.getCuboidHandler().createWall((Player) sender, type, capitalize(args.get(0)));
-                for (Wall w : SkullWalls.getWallHandler().getReadOnlyWalls()) {
-                    if (Objects.equals(wall.getName(), w.getName())) {
-                        sender.sendMessage(RED + "Error: That wall already exists!");
-                        return;
-                    }
-                }
+                wall = SkullWalls.getCuboidHandler().create(sender.getName(), type, capitalize(args.get(0)));
 
-                SkullWalls.getWallHandler().add(wall);
+                if(!SkullWalls.getWallHandler().exists(wall)) {
+                    SkullWalls.getWallHandler().add(wall);
+                }
             } catch (NullPointerException ex) {
+                ex.printStackTrace();
                 sender.sendMessage(RED + "Error: Your cuboid is not complete!");
                 return;
             } catch (IllegalArgumentException exx) {
