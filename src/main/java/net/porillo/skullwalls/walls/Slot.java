@@ -10,14 +10,12 @@ import org.bukkit.block.Skull;
 
 public class Slot {
 
-    @Getter private final Wall parent;
     @Getter private final SerialLocation location;
     @Getter private boolean visible;
     private transient Block parentBlock;
     private transient Skull skull;
 
-    public Slot(Wall parent, Block block) {
-        this.parent = parent;
+    public Slot(Block block) {
         this.location = new SerialLocation(block);
         this.parentBlock = block;
         this.visible = true;

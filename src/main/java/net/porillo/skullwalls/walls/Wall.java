@@ -32,7 +32,7 @@ public class Wall {
         this.bounds = bounds;
         this.whitelist = new HashSet<>();
 
-        setSlots(SkullWalls.getWallHandler().getSlotsFromBounds(this, this.bounds));
+        setSlots(SkullWalls.getWallHandler().getSlotsFromBounds(worldObj, this.bounds));
 
         if (type == WallType.BANNED) {
             this.banUpdate();
@@ -69,7 +69,7 @@ public class Wall {
 
     public void updateWall(List<String> players) {
         if (this.slots == null) {
-            setSlots(SkullWalls.getWallHandler().getSlotsFromBounds(this, this.bounds));
+            setSlots(SkullWalls.getWallHandler().getSlotsFromBounds(worldObj, this.bounds));
         }
 
         this.slots.forEach(Slot::validate); // validate each slot first

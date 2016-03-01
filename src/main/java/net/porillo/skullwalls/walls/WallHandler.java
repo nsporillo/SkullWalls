@@ -7,6 +7,7 @@ import net.porillo.skullwalls.SkullWalls;
 import net.porillo.skullwalls.collections.ConcurrentHashSet;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
@@ -82,12 +83,12 @@ public class WallHandler {
         return null;
     }
 
-    public List<Slot> getSlotsFromBounds(Wall w, int[] b) {
+    public List<Slot> getSlotsFromBounds(World world, int[] b) {
         List<Slot> slots = new ArrayList<>();
         for (int x = Math.min(b[0], b[3]); x <= Math.max(b[0], b[3]); x++) {
             for (int y = Math.min(b[1], b[4]); y <= Math.max(b[1], b[4]); y++) {
                 for (int z = Math.min(b[2], b[5]); z <= Math.max(b[2], b[5]); z++) {
-                    slots.add(new Slot(w, w.getWorld().getBlockAt(x, y, z)));
+                    slots.add(new Slot(world.getBlockAt(x, y, z)));
                 }
             }
         }
