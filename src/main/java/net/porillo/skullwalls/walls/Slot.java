@@ -10,7 +10,7 @@ import org.bukkit.block.Skull;
 
 public class Slot {
 
-    @Getter private final SerialLocation location;
+    @Getter private SerialLocation location;
     @Getter private boolean visible;
     private transient Block parentBlock;
     private transient Skull skull;
