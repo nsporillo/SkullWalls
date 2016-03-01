@@ -14,7 +14,7 @@ public class ActionWorker {
         this.skws = skws;
     }
 
-    public void queueAction(BlockDamageEvent e, String name) {
+    public void executeAction(BlockDamageEvent e, String name) {
         Player player = e.getPlayer();
         ItemStack item = e.getItemInHand();
         for (Action a : this.skws.getConfiguration().getActionMap().values())
@@ -25,7 +25,7 @@ public class ActionWorker {
             }
     }
 
-    public void queueCuboid(BlockDamageEvent e) {
+    public void executeCuboid(BlockDamageEvent e) {
         Player p = e.getPlayer();
         if (p.hasPermission("skullwalls.wand.use")) {
             Block b = e.getBlock();
@@ -50,7 +50,7 @@ public class ActionWorker {
         }
     }
 
-    public void queueQuery(Player p, String name) {
+    public void executeQuery(Player p, String name) {
         String msg = this.skws.getConfiguration().getClickMessage().replace("%p", name);
         p.sendMessage(translateAlternateColorCodes('&', msg));
     }

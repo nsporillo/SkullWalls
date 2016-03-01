@@ -47,7 +47,7 @@ public class ActionListener implements Listener {
                             }
                         }
                     } else if (SkullWalls.getWallHandler().getWallFromBlock(b) != null) {
-                        this.sw.getActionWorker().queueQuery(p, name);
+                        this.sw.getActionWorker().executeQuery(p, name);
                         if (p.hasPermission(perm)) {
                             e.setCancelled(true);
                             p.sendMessage(RED + "To destroy skull you must sneak and break");
@@ -58,7 +58,7 @@ public class ActionListener implements Listener {
                     }
                 } else if (p.isSneaking()) {
                     e.setCancelled(true);
-                    this.sw.getActionWorker().queueQuery(p.getPlayer(), name);
+                    this.sw.getActionWorker().executeQuery(p.getPlayer(), name);
                 } else {
                     e.setCancelled(true);
                     ItemStack s = p.getItemInHand();
@@ -80,11 +80,11 @@ public class ActionListener implements Listener {
             Skull skull = (Skull) e.getBlock().getState();
             String name = this.hasOwner(skull) ? skull.getOwner() : this.def;
             if (e.getItemInHand().getTypeId() == this.sw.getConfiguration().getTool()) {
-                this.sw.getActionWorker().queueCuboid(e);
+                this.sw.getActionWorker().executeCuboid(e);
             } else if (this.sw.getConfiguration().getActionMap().containsKey(e.getItemInHand().getTypeId())) {
-                this.sw.getActionWorker().queueAction(e, name);
+                this.sw.getActionWorker().executeAction(e, name);
             } else if (skull.getSkullType() == SkullType.PLAYER)
-                this.sw.getActionWorker().queueQuery(player, name);
+                this.sw.getActionWorker().executeQuery(player, name);
         }
     }
 
