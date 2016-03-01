@@ -15,14 +15,10 @@ public class DeleteCommand extends BaseCommand {
         super.setName("delete");
         super.addUsage("[name]", null, "Deletes wall by name");
         super.setPermission("skullwalls.delete");
+        super.setConsoleOnly(false);
     }
 
     public void runCommand(CommandSender sender, List<String> args) {
-        if (!this.checkPermission(sender)) {
-            this.noPermission(sender);
-            return;
-        }
-
         if (args.size() == 0) {
             sender.sendMessage(ChatColor.RED + "Specify the name of the wall");
         } else if (args.size() == 1) {

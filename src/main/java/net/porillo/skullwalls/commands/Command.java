@@ -5,11 +5,15 @@ import org.bukkit.command.CommandSender;
 import java.util.List;
 
 public interface Command {
-    boolean checkPermission(CommandSender paramCommandSender);
+
+    boolean checkPermission(CommandSender sender);
 
     int getRequiredArgs();
 
-    void runCommand(CommandSender paramCommandSender, List<String> paramList);
+    boolean isConsoleOnly();
 
-    void showHelp(CommandSender paramCommandSender, String paramString);
+    void runCommand(CommandSender sender, List<String> paramList);
+
+    void showHelp(CommandSender sender, String paramString);
+
 }

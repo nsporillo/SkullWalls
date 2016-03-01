@@ -3,7 +3,9 @@ package net.porillo.skullwalls.commands;
 import net.porillo.skullwalls.SkullWalls;
 import net.porillo.skullwalls.walls.SkullWall;
 import net.porillo.skullwalls.walls.Utils;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -57,6 +59,15 @@ public class CommandHandler {
             return;
         }
 
+        if (!cmd.checkPermission(sender)) {
+            sender.sendMessage(RED + "You do not have permission to use that command!");
+            return;
+        }
+
+        if (sender instanceof ConsoleCommandSender && cmd.isConsoleOnly()) {
+            sender.sendMessage(ChatColor.RED + "Console cannot use this command");
+            return;
+        }
 
         cmd.runCommand(sender, arguments);
     }

@@ -1,5 +1,7 @@
 package net.porillo.skullwalls.commands;
 
+import lombok.Getter;
+import lombok.Setter;
 import net.porillo.skullwalls.SkullWalls;
 import org.bukkit.command.CommandSender;
 
@@ -9,11 +11,13 @@ import java.util.List;
 import static org.bukkit.ChatColor.*;
 
 public abstract class BaseCommand implements Command {
+
     protected final SkullWalls plugin;
-    protected String name;
-    protected String permission;
-    protected int required = 0;
     protected List<String> usages = new ArrayList<>();
+    @Setter protected String name;
+    @Setter protected String permission;
+    @Getter @Setter protected boolean consoleOnly;
+    @Getter @Setter protected int requiredArgs = 0;
 
     public BaseCommand(SkullWalls plugin) {
         this.plugin = plugin;
@@ -45,28 +49,9 @@ public abstract class BaseCommand implements Command {
         return this.permission == null || sender.hasPermission(this.permission);
     }
 
-    public int getRequiredArgs() {
-        return this.required;
-    }
-
-    protected void noPermission(CommandSender sender) {
-        sender.sendMessage(RED + "You do not have permission to use that command!");
-    }
-
-    protected final void setName(String name) {
-        this.name = name;
-    }
-
-    protected final void setPermission(String perm) {
-        this.permission = perm;
-    }
-
-    protected final void setRequiredArgs(int req) {
-        this.required = req;
-    }
-
     public void showHelp(CommandSender sender, String label) {
-        for (String usage : this.usages)
+        for (String usage : this.usages) {
             sender.sendMessage(GRAY + String.format("%1$-10s", label) + usage);
+        }
     }
 }

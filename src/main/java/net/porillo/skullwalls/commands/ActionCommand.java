@@ -22,10 +22,6 @@ public class ActionCommand extends BaseCommand {
 
     @Override
     public void runCommand(final CommandSender sender, final List<String> args) {
-        if (!this.checkPermission(sender)) {
-            this.noPermission(sender);
-            return;
-        }
         if (args.size() == 0) {
             this.displayHelp(sender);
         } else if (args.size() == 1) {

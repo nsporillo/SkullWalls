@@ -12,6 +12,7 @@ public class VersionCommand extends BaseCommand {
     public VersionCommand(SkullWalls plugin) {
         super(plugin);
         super.setName("version");
+
     }
 
     public void runCommand(CommandSender sender, List<String> args) {

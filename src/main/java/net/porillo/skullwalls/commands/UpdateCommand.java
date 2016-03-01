@@ -14,14 +14,10 @@ public class UpdateCommand extends BaseCommand {
         super.setName("update");
         super.addUsage("[wall]", null, "Recalculates all slots");
         super.setPermission("skullwalls.update");
+        super.setConsoleOnly(false);
     }
 
     public void runCommand(CommandSender sender, List<String> args) {
-        if (!this.checkPermission(sender)) {
-            this.noPermission(sender);
-            return;
-        }
-
         if (args.size() == 0) {
             sender.sendMessage(RED + "Specify the name of the wall");
         } else if (args.size() == 1) {

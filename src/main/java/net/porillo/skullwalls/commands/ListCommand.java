@@ -15,14 +15,10 @@ public class ListCommand extends BaseCommand {
         super.setName("list");
         super.addUsage(null, null, "Lists all SkullWalls");
         super.setPermission("skullwalls.list");
+        super.setConsoleOnly(false);
     }
 
     public void runCommand(CommandSender sender, List<String> args) {
-        if (!this.checkPermission(sender)) {
-            this.noPermission(sender);
-            return;
-        }
-
         if (args.size() == 0) {
             SkullWall[] walls = SkullWalls.getWalls().toArray(new SkullWall[SkullWalls.getWalls().size()]);
             sender.sendMessage(BLUE + "Listing the info for " + SkullWalls.getWalls().size() + " SkullWalls");

@@ -7,7 +7,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Skull;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -21,19 +20,10 @@ public class RotateCommand extends BaseCommand {
         super.setName("rotate");
         super.addUsage("[blockface]", null, "Rotates skull");
         super.setPermission("skullwalls.rotate");
+        super.setConsoleOnly(true);
     }
 
     public void runCommand(CommandSender sender, List<String> args) {
-        if (!this.checkPermission(sender)) {
-            this.noPermission(sender);
-            return;
-        }
-
-        if (sender instanceof ConsoleCommandSender) {
-            sender.sendMessage(RED + "Console cannot use this command");
-            return;
-        }
-
         if (args.size() > 0) {
             Block b = ((Player) sender).getTargetBlock(ImmutableSet.of(), 6);
             if (b.getType().equals(Material.SKULL)) {

@@ -4,7 +4,6 @@ import net.porillo.skullwalls.SkullWalls;
 import net.porillo.skullwalls.walls.SkullWall;
 import net.porillo.skullwalls.walls.WallType;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -20,19 +19,10 @@ public class CreateCommand extends BaseCommand {
         super.setName("create");
         super.addUsage("[name]", "[type]", "Creates a new skull wall");
         super.setPermission("skullwalls.create");
+        super.setConsoleOnly(true);
     }
 
     public void runCommand(CommandSender sender, List<String> args) {
-        if (!this.checkPermission(sender)) {
-            this.noPermission(sender);
-            return;
-        }
-
-        if (sender instanceof ConsoleCommandSender) {
-            sender.sendMessage(RED + "Console cannot use this command");
-            return;
-        }
-
         if (args.size() == 0) {
             sender.sendMessage(RED + "Specify the name of the wall");
         } else if (args.size() == 1) {

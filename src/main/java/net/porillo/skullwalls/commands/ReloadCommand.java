@@ -14,14 +14,10 @@ public class ReloadCommand extends BaseCommand {
         super.setName("reload");
         super.addUsage(null, null, "Reloads plugin");
         super.setPermission("skullwalls.reload");
+        super.setConsoleOnly(false);
     }
 
     public void runCommand(CommandSender sender, List<String> args) {
-        if (!this.checkPermission(sender)) {
-            this.noPermission(sender);
-            return;
-        }
-
         if (args.size() == 0) {
             sender.sendMessage(ChatColor.BLUE + "Reloading configuration and walls!");
             this.plugin.getConfiguration().reload();

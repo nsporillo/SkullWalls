@@ -17,14 +17,10 @@ public class WallEditCommand extends BaseCommand {
         super.setName("edit");
         super.addUsage("[wall]", "[option]", "Edits a wall");
         super.setPermission("skullwalls.edit");
+        super.setConsoleOnly(false);
     }
 
     public void runCommand(CommandSender sender, List<String> args) {
-        if (!this.checkPermission(sender)) {
-            this.noPermission(sender);
-            return;
-        }
-
         if (args.size() == 0)
             sender.sendMessage(RED + "Specify the name of the wall");
         else if (args.size() == 1)
