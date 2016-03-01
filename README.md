@@ -1,6 +1,13 @@
 Skullwalls
 ==========
+Releases: https://github.com/nsporillo/skullwalls/releases
 
+Issues: https://github.com/nsporillo/skullwalls/issues
+
+Contact: nsporillo@gmail.com
+
+Description
+==========
 The idea of SkullWalls is to integrate a physical, visual player face "board" which is interactive. 
 
 Players can click the heads to see who's skin it is displaying. 
