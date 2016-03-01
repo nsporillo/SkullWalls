@@ -1,4 +1,4 @@
-package net.porillo.skullwalls;
+package net.porillo.skullwalls.actions;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;

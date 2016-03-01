@@ -1,5 +1,7 @@
-package net.porillo.skullwalls;
+package net.porillo.skullwalls.actions;
 
+import net.porillo.skullwalls.SkullWalls;
+import net.porillo.skullwalls.actions.Action;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockDamageEvent;

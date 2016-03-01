@@ -1,7 +1,7 @@
 package net.porillo.skullwalls.commands;
 
 import net.porillo.skullwalls.SkullWalls;
-import net.porillo.skullwalls.walls.SkullWall;
+import net.porillo.skullwalls.walls.Wall;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -22,12 +22,12 @@ public class DeleteCommand extends BaseCommand {
         if (args.size() == 0) {
             sender.sendMessage(ChatColor.RED + "Specify the name of the wall");
         } else if (args.size() == 1) {
-            SkullWall sw = null;
+            Wall sw = null;
 
             try {
-                Set<SkullWall> wallsCopy = SkullWalls.getWallHandler().getReadOnlyWalls();
+                Set<Wall> wallsCopy = SkullWalls.getWallHandler().getReadOnlyWalls();
                 Serializer.save(wallsCopy);
-                for (SkullWall w : wallsCopy) {
+                for (Wall w : wallsCopy) {
                     if (w.getName().equalsIgnoreCase(args.get(0))) {
                         sw = w;
                         break;

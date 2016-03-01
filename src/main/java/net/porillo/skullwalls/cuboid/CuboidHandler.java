@@ -1,6 +1,6 @@
-package net.porillo.skullwalls;
+package net.porillo.skullwalls.cuboid;
 
-import net.porillo.skullwalls.walls.SkullWall;
+import net.porillo.skullwalls.walls.Wall;
 import net.porillo.skullwalls.walls.WallType;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -31,13 +31,13 @@ public class CuboidHandler {
         this.sessions.remove(player.getName());
     }
 
-    public SkullWall createWall(Player player, WallType type, String name) {
-        SkullWall wall = null;
+    public Wall createWall(Player player, WallType type, String name) {
+        Wall wall = null;
         if (this.sessions.containsKey(player.getName())) {
             Session s = this.sessions.get(player.getName());
             if (s.isComplete()) {
                 int[] b = {s.one.getX(), s.one.getY(), s.one.getZ(), s.two.getX(), s.two.getY(), s.two.getZ()};
-                wall = new SkullWall(type, name, s.one.getWorld(), b);
+                wall = new Wall(type, name, s.one.getWorld(), b);
             }
 
             clear(player);

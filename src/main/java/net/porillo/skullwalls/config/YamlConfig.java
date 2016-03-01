@@ -1,7 +1,7 @@
 package net.porillo.skullwalls.config;
 
 import lombok.Getter;
-import net.porillo.skullwalls.Action;
+import net.porillo.skullwalls.actions.Action;
 import net.porillo.skullwalls.SkullWalls;
 import org.bukkit.configuration.ConfigurationSection;
 

@@ -1,24 +1,24 @@
 package net.porillo.skullwalls.walls;
 
+import lombok.Getter;
+import net.porillo.skullwalls.SerialLocation;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.SkullType;
 import org.bukkit.block.Block;
 import org.bukkit.block.Skull;
 
-import java.io.Serializable;
+public class Slot {
 
-public class SkullSlot implements Serializable {
-    private static final long serialVersionUID = 8074488926217790524L;
+    @Getter private final Wall parent;
+    @Getter private final SerialLocation location;
+    @Getter private boolean visible;
     private transient Block parentBlock;
     private transient Skull skull;
-    private SkullWall parent;
-    private SerialLocation loc;
-    private boolean visible;
 
-    protected SkullSlot(SkullWall parent, Block block) {
+    public Slot(Wall parent, Block block) {
         this.parent = parent;
-        this.loc = new SerialLocation(block);
+        this.location = new SerialLocation(block);
         this.parentBlock = block;
         this.visible = true;
 
@@ -76,10 +76,6 @@ public class SkullSlot implements Serializable {
         }
     }
 
-    public String getOwner() {
-        return this.skull.getOwner();
-    }
-
     public boolean hasOwner() {
         return this.isVisible() && !this.getSkull().getOwner().equals("");
     }
@@ -96,19 +92,11 @@ public class SkullSlot implements Serializable {
         return this.getBlock().getType() == Material.SKULL;
     }
 
-    public boolean isVisible() {
-        return this.visible;
-    }
-
     public Block getBlock() {
         if (this.parentBlock == null) {
-            this.parentBlock = Bukkit.getWorld(loc.getWorld()).getBlockAt(loc.getX(), loc.getY(), loc.getZ());
+            this.parentBlock = Bukkit.getWorld(location.getWorld()).getBlockAt(location.getX(), location.getY(), location.getZ());
         }
         return this.parentBlock;
-    }
-
-    public SkullWall getParent() {
-        return this.parent;
     }
 
     @Override
@@ -116,13 +104,13 @@ public class SkullSlot implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        SkullSlot skullSlot = (SkullSlot) o;
+        Slot skullSlot = (Slot) o;
 
-        return loc.equals(skullSlot.loc);
+        return location.equals(skullSlot.location);
     }
 
     @Override
     public int hashCode() {
-        return loc.hashCode();
+        return location.hashCode();
     }
 }

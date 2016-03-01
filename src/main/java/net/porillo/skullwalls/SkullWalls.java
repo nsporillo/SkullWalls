@@ -3,9 +3,13 @@ package net.porillo.skullwalls;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.Getter;
+import net.porillo.skullwalls.actions.ActionListener;
+import net.porillo.skullwalls.actions.ActionWorker;
 import net.porillo.skullwalls.commands.CommandHandler;
 import net.porillo.skullwalls.config.YamlConfig;
-import net.porillo.skullwalls.walls.SkullWall;
+import net.porillo.skullwalls.cuboid.CuboidHandler;
+import net.porillo.skullwalls.walls.Wall;
+import net.porillo.skullwalls.walls.WallHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -59,7 +63,7 @@ public class SkullWalls extends JavaPlugin {
     }
 
     public void updateAllWalls() {
-        for (SkullWall w : wallHandler.getWalls()) {
+        for (Wall w : wallHandler.getWalls()) {
             w.updateWall(getOnlinePlayers());
         }
     }

@@ -1,7 +1,7 @@
 package net.porillo.skullwalls.commands;
 
 import net.porillo.skullwalls.SkullWalls;
-import net.porillo.skullwalls.walls.SkullWall;
+import net.porillo.skullwalls.walls.Wall;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
@@ -21,11 +21,11 @@ public class ListCommand extends BaseCommand {
 
     public void runCommand(CommandSender sender, List<String> args) {
         if (args.size() == 0) {
-            Set<SkullWall> wallsCopy = SkullWalls.getWallHandler().getReadOnlyWalls();
-            SkullWall[] walls = wallsCopy.toArray(new SkullWall[wallsCopy.size()]);
+            Set<Wall> wallsCopy = SkullWalls.getWallHandler().getReadOnlyWalls();
+            Wall[] walls = wallsCopy.toArray(new Wall[wallsCopy.size()]);
             sender.sendMessage(BLUE + "Listing the info for " + wallsCopy.size() + " SkullWalls");
             for (int i = 0; i < walls.length; i++) {
-                SkullWall w = walls[i];
+                Wall w = walls[i];
                 sender.sendMessage(BLUE + "[" + GOLD + (i + 1) + BLUE + "] Name: " + WHITE + w.getName() + GOLD
                         + " Type: " + WHITE + w.getType() + GOLD + " Bounds: " + WHITE + w.getStringBounds());
             }

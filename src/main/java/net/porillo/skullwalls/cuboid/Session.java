@@ -1,4 +1,4 @@
-package net.porillo.skullwalls;
+package net.porillo.skullwalls.cuboid;
 
 import org.bukkit.block.Block;
 

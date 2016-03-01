@@ -1,7 +1,7 @@
 package net.porillo.skullwalls.commands;
 
 import net.porillo.skullwalls.SkullWalls;
-import net.porillo.skullwalls.walls.SkullWall;
+import net.porillo.skullwalls.walls.Wall;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
@@ -27,7 +27,7 @@ public class WallEditCommand extends BaseCommand {
         else if (args.size() > 1)
             try {
                 Serializer.save(SkullWalls.getWallHandler().getWalls());
-                for (SkullWall w : SkullWalls.getWallHandler().getWalls())
+                for (Wall w : SkullWalls.getWallHandler().getWalls())
                     if (w.getName().equalsIgnoreCase(args.get(0))) {
                         if (args.get(1).equalsIgnoreCase("transparency") || args.get(1).equalsIgnoreCase("trans")) {
                             if (args.size() == 3) {

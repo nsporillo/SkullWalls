@@ -1,8 +1,7 @@
 package net.porillo.skullwalls.commands;
 
 import net.porillo.skullwalls.SkullWalls;
-import net.porillo.skullwalls.walls.SkullWall;
-import net.porillo.skullwalls.walls.Utils;
+import net.porillo.skullwalls.walls.Wall;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -36,9 +35,9 @@ public class CommandHandler {
         if (args.length == 1 && args[0].equals("test")) {
             Iterator localIterator = SkullWalls.getWallHandler().getReadOnlyWalls().iterator();
             if (localIterator.hasNext()) {
-                SkullWall sw = (SkullWall) localIterator.next();
+                Wall sw = (Wall) localIterator.next();
                 sender.sendMessage(BLUE + "Wall: " + sw.getName());
-                sender.sendMessage(GOLD + "CentDist: " + Utils.getDistanceFromCenter(sw, (Player) sender));
+                sender.sendMessage(GOLD + "CentDist: " + SkullWalls.getWallHandler().getDistanceFromCenter(sw, (Player) sender));
                 sender.sendMessage(BLUE + "Transparent: " + sw.isTransparent());
                 return;
             }

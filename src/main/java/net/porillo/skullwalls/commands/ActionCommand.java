@@ -1,6 +1,6 @@
 package net.porillo.skullwalls.commands;
 
-import net.porillo.skullwalls.Action;
+import net.porillo.skullwalls.actions.Action;
 import net.porillo.skullwalls.SkullWalls;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

@@ -1,7 +1,7 @@
 package net.porillo.skullwalls.commands;
 
 import net.porillo.skullwalls.SkullWalls;
-import net.porillo.skullwalls.walls.SkullWall;
+import net.porillo.skullwalls.walls.Wall;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -23,7 +23,7 @@ public class ReloadCommand extends BaseCommand {
             this.plugin.getConfiguration().reload();
             this.plugin.reload();
 
-            for (SkullWall w : SkullWalls.getWallHandler().getReadOnlyWalls())
+            for (Wall w : SkullWalls.getWallHandler().getReadOnlyWalls())
                 w.updateWall(SkullWalls.getOnlinePlayers());
         }
     }

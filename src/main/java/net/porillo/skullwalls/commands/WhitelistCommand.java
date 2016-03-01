@@ -1,7 +1,7 @@
 package net.porillo.skullwalls.commands;
 
 import net.porillo.skullwalls.SkullWalls;
-import net.porillo.skullwalls.walls.SkullWall;
+import net.porillo.skullwalls.walls.Wall;
 import net.porillo.skullwalls.walls.WallType;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -24,7 +24,7 @@ public class WhitelistCommand extends BaseCommand {
             s.sendMessage(ChatColor.RED + "Specify the name of the wall");
         } else {
             if (args.size() == 1) {
-                for (SkullWall w : SkullWalls.getWallHandler().getWalls()) {
+                for (Wall w : SkullWalls.getWallHandler().getWalls()) {
                     if (!w.getType().equals(WallType.CUSTOM) || !w.getName().equalsIgnoreCase(args.get(0)))
                         s.sendMessage(ChatColor.GREEN + "===" + ChatColor.GRAY + w.getName() + "'s whitelist" + ChatColor.GREEN + "===");
                     for (String str : w.getWhitelist()) {
@@ -34,7 +34,7 @@ public class WhitelistCommand extends BaseCommand {
                 }
             } else if (args.size() == 2) {
                 String name = args.get(1);
-                for (SkullWall w : SkullWalls.getWallHandler().getWalls()) {
+                for (Wall w : SkullWalls.getWallHandler().getWalls()) {
                     String x = w.getName();
                     if (x.equalsIgnoreCase(args.get(0)) && w.getType().equals(WallType.CUSTOM)) {
                         if (w.getWhitelist().contains(name)) {

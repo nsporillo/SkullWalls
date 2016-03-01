@@ -1,41 +1,38 @@
 package net.porillo.skullwalls.walls;
 
+import lombok.Getter;
+import lombok.Setter;
+import net.porillo.skullwalls.SkullWalls;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
-public class SkullWall implements Serializable {
+public class Wall {
 
-    private static final long serialVersionUID = 8086068912212564853L;
     private transient List<String> knownBanned = new ArrayList<>();
     private transient List<String> cachedPlayers = new ArrayList<>();
-    protected transient World worldObj;
-    protected String world;
-    protected WallType type;
-    protected Set<String> list;
-    protected List<SkullSlot> slots;
-    protected String name;
-    protected int[] bounds;
-    protected boolean transparent;
+    private transient World worldObj;
+    @Getter @Setter private List<Slot> slots;
+    @Getter private String worldName;
+    @Getter private WallType type;
+    @Getter private Set<String> whitelist;
+    @Getter private String name;
+    @Getter private int[] bounds;
+    @Getter private boolean transparent;
 
-    public SkullWall(WallType type, String name, World world, int[] bounds) {
+    public Wall(WallType type, String name, World world, int[] bounds) {
         this.transparent = false;
         this.name = name;
         this.type = type;
         this.worldObj = world;
-        this.world = this.worldObj.getName();
+        this.worldName = this.worldObj.getName();
         this.bounds = bounds;
-        this.list = new HashSet<>();
+        this.whitelist = new HashSet<>();
 
-        Utils.gen(this, bounds);
+        setSlots(SkullWalls.getWallHandler().getSlotsFromBounds(this, this.bounds));
 
         if (type == WallType.BANNED) {
             this.banUpdate();
@@ -47,8 +44,8 @@ public class SkullWall implements Serializable {
     /*
      * Find the next available slot
      */
-    public SkullSlot getNextAvailable() {
-        for (SkullSlot slot : this.slots) {
+    public Slot getNextAvailable() {
+        for (Slot slot : this.slots) {
             if (!slot.hasOwner()) {
                 if (!slot.isVisible()) {
                     slot.appear();
@@ -72,13 +69,13 @@ public class SkullWall implements Serializable {
 
     public void updateWall(List<String> players) {
         if (this.slots == null) {
-            Utils.gen(this, this.bounds);
+            setSlots(SkullWalls.getWallHandler().getSlotsFromBounds(this, this.bounds));
         }
 
-        this.slots.forEach(SkullSlot::validate); // validate each slot first
+        this.slots.forEach(Slot::validate); // validate each slot first
 
         for (String player : getCachedNames(players)) {
-            SkullSlot s = this.getNextAvailable();
+            Slot s = this.getNextAvailable();
             if (s == null)
                 continue;
             if (this.type == WallType.GLOBAL) {
@@ -87,11 +84,11 @@ public class SkullWall implements Serializable {
             }
             Player p = Bukkit.getPlayerExact(player);
             if (this.type == WallType.CUSTOM) {
-                if (p.hasPermission("skullwalls.wall." + this.name) || this.list.contains(p.getName()))
+                if (p.hasPermission("skullwalls.wall." + this.name) || this.whitelist.contains(p.getName()))
                     s.setOwner(player);
             } else if (this.type == WallType.BANNED) {
                 if (this.knownBanned == null) {
-                    this.knownBanned = new ArrayList<String>();
+                    this.knownBanned = new ArrayList<>();
                 }
                 if (this.knownBanned.size() < Bukkit.getBannedPlayers().size())
                     this.banUpdate();
@@ -110,9 +107,7 @@ public class SkullWall implements Serializable {
                 this.knownBanned.add(op.getName());
                 tot++;
             } else {
-                System.err.println("Wall has " + max
-                        + " max slots, theres too many banned players! ("
-                        + Bukkit.getBannedPlayers().size() + ")");
+                System.err.println("Wall has " + max + " max slots, theres too many banned players! (" + Bukkit.getBannedPlayers().size() + ")");
                 break;
             }
     }
@@ -120,14 +115,9 @@ public class SkullWall implements Serializable {
     public void setTransparent(boolean value) {
         this.transparent = value;
         if (value) {
-            for (SkullSlot s : this.slots) {
-                if (!s.hasOwner())
-                    s.disappear();
-            }
+            this.slots.stream().filter(s -> !s.hasOwner()).forEach(Slot::disappear);
         } else
-            for (SkullSlot s : this.slots)
-                if (!s.hasOwner())
-                    s.appear();
+            this.slots.stream().filter(s -> !s.hasOwner()).forEach(Slot::appear);
     }
 
     public void offSet(int num) {
@@ -142,7 +132,7 @@ public class SkullWall implements Serializable {
     }
 
     public void verifyState() {
-        for (SkullSlot s : this.slots) {
+        for (Slot s : this.slots) {
             if (this.transparent) {
                 if (!s.hasOwner()) {
                     s.disappear();
@@ -155,46 +145,13 @@ public class SkullWall implements Serializable {
 
     public World getWorld() {
         if (this.worldObj == null) {
-            this.worldObj = Bukkit.getWorld(this.world);
+            this.worldObj = Bukkit.getWorld(this.worldName);
             this.banUpdate();
         }
         return this.worldObj;
     }
 
-    public Block getBlock(int i) {
-        if (i == 1)
-            return this.getWorld().getBlockAt(this.bounds[0], this.bounds[1], this.bounds[2]);
-        if (i == 2) {
-            return this.getWorld().getBlockAt(this.bounds[3], this.bounds[4], this.bounds[5]);
-        }
-        return null;
-    }
-
-    public WallType getType() {
-        return this.type;
-    }
-
-    public List<SkullSlot> getSlots() {
-        return this.slots;
-    }
-
-    public int[] getBounds() {
-        return this.bounds;
-    }
-
-    public Set<String> getWhitelist() {
-        return this.list;
-    }
-
-    public boolean isTransparent() {
-        return this.transparent;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
     public String getStringBounds() {
-        return Utils.bind(this.bounds);
+        return Arrays.toString(Arrays.toString(bounds).split("[\\[\\]]")[1].split(", "));
     }
 }
