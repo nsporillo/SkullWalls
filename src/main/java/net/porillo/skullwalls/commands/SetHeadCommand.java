@@ -1,5 +1,6 @@
 package net.porillo.skullwalls.commands;
 
+import com.google.common.collect.ImmutableSet;
 import net.porillo.skullwalls.SkullWalls;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -29,7 +30,7 @@ public class SetHeadCommand extends BaseCommand {
             return;
         }
         if (args.size() == 1) {
-            Block b = ((Player) sender).getTargetBlock(null, 6);
+            Block b = ((Player) sender).getTargetBlock(ImmutableSet.of(), 6);
             if (b.getType().equals(Material.SKULL)) {
                 Skull skull = (Skull) b.getState();
                 skull.setOwner(args.get(0));
