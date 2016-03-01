@@ -90,7 +90,7 @@ public class ActionListener implements Listener {
     }
 
     private boolean hasOwner(Skull skull) {
-        return !skull.getOwner().equals("");
+        return skull.hasOwner() && !skull.getOwner().equals("");
     }
 
     private boolean hasTool(Player p) {
