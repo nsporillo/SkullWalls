@@ -19,81 +19,63 @@ public class Slot {
         this.location = new SerialLocation(block);
         this.parentBlock = block;
         this.visible = true;
-
-        try {
-            this.skull = (Skull) block.getState();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
     }
 
     public void validate() {
-        if (this.isSkull() && this.skull == null) {
-            this.skull = (Skull) this.getBlock().getState();
-            this.skull.setSkullType(SkullType.PLAYER);
-            this.skull.setOwner("");
-            this.skull.update();
-        } else if (!this.isSkull() && this.isVisible()) {
-            this.visible = false;
-            this.appear();
+        if (isSkull() && skull == null) {
+            getSkull().setSkullType(SkullType.PLAYER);
+        } else if (!isSkull() && isVisible()) {
+            visible = false;
+            appear();
         }
-        this.setOwner("");
     }
 
     public void appear() {
-        if (this.isVisible()) {
+        if (isVisible()) {
             return;
         }
 
-        this.visible = true;
-        this.getBlock().setType(Material.SKULL);
+        visible = true;
+        getBlock().setType(Material.SKULL);
 
-        try {
-            this.skull = (Skull) this.getBlock().getState();
-        } catch (Exception ex) {
-            System.err.println("Error casting skull to slot!");
-            return;
-        }
-
-        this.skull.setSkullType(SkullType.PLAYER);
-        this.skull.setOwner("");
-        this.skull.update();
+        getSkull().setSkullType(SkullType.PLAYER);
+        setOwner("Steve");
     }
 
     public void disappear() {
-        this.visible = false;
-        this.getBlock().setType(Material.AIR);
+        visible = false;
+        getBlock().setType(Material.AIR);
     }
 
     public void setOwner(String owner) {
-        if (isSkull()) {
-            Skull sk = this.getSkull();
+        Skull sk = this.getSkull();
+        if(sk != null) {
             sk.setOwner(owner);
-            sk.update();
+            sk.update(true, true);
         }
     }
 
     public boolean hasOwner() {
-        return this.isVisible() && !this.getSkull().getOwner().equals("");
+        return isVisible() && getSkull().hasOwner() && !skull.getOwner().equals("Steve");
     }
 
     public Skull getSkull() {
-        if (this.skull == null) {
-            this.skull = (Skull) this.getBlock().getState();
+        if (skull == null && isSkull()) {
+            skull = (Skull) getBlock().getState();
         }
 
-        return this.skull;
+        return skull;
     }
 
     public boolean isSkull() {
-        return this.getBlock().getType() == Material.SKULL;
+        return getBlock().getType() == Material.SKULL;
     }
 
     public Block getBlock() {
-        if (this.parentBlock == null) {
-            this.parentBlock = Bukkit.getWorld(location.getWorld()).getBlockAt(location.getX(), location.getY(), location.getZ());
+        if (parentBlock == null) {
+            parentBlock = Bukkit.getWorld(location.getWorld()).getBlockAt(location.getX(), location.getY(), location.getZ());
         }
-        return this.parentBlock;
+        return parentBlock;
     }
 
     @Override

@@ -6,6 +6,7 @@ import net.porillo.skullwalls.SkullWalls;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
+import org.bukkit.block.Skull;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -15,7 +16,7 @@ public class Wall {
     private transient List<String> knownBanned = new ArrayList<>();
     private transient List<String> cachedPlayers = new ArrayList<>();
     private transient World worldObj;
-    @Getter @Setter private List<Slot> slots;
+    @Getter @Setter private transient List<Slot> slots;
     @Getter private String worldName;
     @Getter private WallType type;
     @Getter private Set<String> whitelist;
@@ -37,23 +38,8 @@ public class Wall {
         if (type == WallType.BANNED) {
             this.banUpdate();
         } else {
-            this.updateWall(cachedPlayers);
+            updateWall(SkullWalls.getOnlinePlayers());
         }
-    }
-
-    /*
-     * Find the next available slot
-     */
-    public Slot getNextAvailable() {
-        for (Slot slot : this.slots) {
-            if (!slot.hasOwner()) {
-                if (!slot.isVisible()) {
-                    slot.appear();
-                }
-                return slot;
-            }
-        }
-        return null;
     }
 
     private List<String> getCachedNames(List<String> players) {
@@ -65,29 +51,33 @@ public class Wall {
 
     public void updateWall(List<String> players) {
         if (this.slots == null) {
+            if(worldObj == null) {
+                worldObj = Bukkit.getWorld(worldName);
+            }
+
             setSlots(SkullWalls.getWallHandler().getSlotsFromBounds(worldObj, this.bounds));
         }
 
-        this.slots.forEach(Slot::validate); // validate each slot first
+        List<String> copy = getCachedNames(players);
 
-        for (String player : getCachedNames(players)) {
-            Slot s = this.getNextAvailable();
-            if (s == null)
-                continue;
-            if (this.type == WallType.GLOBAL) {
-                s.setOwner(player);
-                continue;
-            }
-            Player p = Bukkit.getPlayerExact(player);
-            if (this.type == WallType.CUSTOM) {
-                if (p.hasPermission("skullwalls.wall." + this.name) || this.whitelist.contains(p.getName()))
-                    s.setOwner(player);
-            } else if (this.type == WallType.BANNED) {
-                if (this.knownBanned == null) {
-                    this.knownBanned = new ArrayList<>();
+        if (type == WallType.CUSTOM) {
+            for (String name : copy) {
+                Player p = Bukkit.getPlayerExact(name);
+                if (this.type == WallType.CUSTOM) {
+                    if (!p.hasPermission("skullwalls.wall." + this.name) && !this.whitelist.contains(p.getName())) {
+                        copy.remove(name);
+                    }
                 }
-                if (this.knownBanned.size() < Bukkit.getBannedPlayers().size())
-                    this.banUpdate();
+            }
+        } else if (type == WallType.BANNED) {
+            banUpdate();
+            copy = knownBanned;
+        }
+
+        for (Slot s : slots) {
+            s.validate();
+            if (copy.size() > 0) {
+                s.setOwner(copy.remove(0));
             }
         }
 
@@ -99,7 +89,6 @@ public class Wall {
         int tot = 0;
         for (OfflinePlayer op : Bukkit.getBannedPlayers())
             if (tot < max - 1) {
-                this.getNextAvailable().setOwner(op.getName());
                 this.knownBanned.add(op.getName());
                 tot++;
             } else {
@@ -137,14 +126,6 @@ public class Wall {
                 s.appear();
             }
         }
-    }
-
-    public World getWorld() {
-        if (this.worldObj == null) {
-            this.worldObj = Bukkit.getWorld(this.worldName);
-            this.banUpdate();
-        }
-        return this.worldObj;
     }
 
     public String getStringBounds() {
