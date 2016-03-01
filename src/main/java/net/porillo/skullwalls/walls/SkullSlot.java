@@ -1,8 +1,6 @@
 package net.porillo.skullwalls.walls;
 
-import net.porillo.skullwalls.SkullWalls;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.SkullType;
 import org.bukkit.block.Block;

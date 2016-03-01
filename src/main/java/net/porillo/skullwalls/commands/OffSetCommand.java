@@ -1,12 +1,10 @@
 package net.porillo.skullwalls.commands;
 
 import net.porillo.skullwalls.SkullWalls;
-import net.porillo.skullwalls.walls.SkullWall;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
-import java.util.Set;
 
 public class OffSetCommand extends BaseCommand {
 

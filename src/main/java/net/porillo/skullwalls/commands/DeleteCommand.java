@@ -1,6 +1,5 @@
 package net.porillo.skullwalls.commands;
 
-import net.porillo.skullwalls.Serializer;
 import net.porillo.skullwalls.SkullWalls;
 import net.porillo.skullwalls.walls.SkullWall;
 import org.bukkit.ChatColor;

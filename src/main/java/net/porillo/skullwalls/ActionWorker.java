@@ -29,8 +29,8 @@ public class ActionWorker {
         Player p = e.getPlayer();
         if (p.hasPermission("skullwalls.wand.use")) {
             Block b = e.getBlock();
-            this.skws.getCuboider().add(p, b);
-            int step = this.skws.getCuboider().getStep(p);
+            this.skws.getCuboidHandler().add(p, b);
+            int step = this.skws.getCuboidHandler().getStep(p);
             if (step == 1) {
                 p.sendMessage(GREEN + "Selected bound one " + GOLD + b.getX()
                         + GREEN + ", " + GOLD + b.getY() + GREEN

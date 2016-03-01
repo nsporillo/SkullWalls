@@ -1,6 +1,5 @@
 package net.porillo.skullwalls;
 
-import net.porillo.skullwalls.walls.Utils;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.SkullType;

@@ -19,7 +19,7 @@ public class ClearCommand extends BaseCommand {
 
     public void runCommand(CommandSender sender, List<String> args) {
         if (args.size() == 0) {
-            this.plugin.getCuboider().clear((Player) sender);
+            this.plugin.getCuboidHandler().clear((Player) sender);
             sender.sendMessage(ChatColor.BLUE + "Cleared your session");
         }
     }

@@ -33,7 +33,7 @@ public class CreateCommand extends BaseCommand {
 
             try {
                 type = WallType.valueOf(args.get(1).toUpperCase());
-                wall = this.plugin.getCuboider().createWall((Player) sender, type, capitalize(args.get(0)));
+                wall = this.plugin.getCuboidHandler().createWall((Player) sender, type, capitalize(args.get(0)));
                 for (SkullWall w : SkullWalls.getWallHandler().getReadOnlyWalls()) {
                     if (Objects.equals(wall.getName(), w.getName())) {
                         sender.sendMessage(RED + "Error: That wall already exists!");

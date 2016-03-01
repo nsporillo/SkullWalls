@@ -1,6 +1,5 @@
 package net.porillo.skullwalls.collections;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
