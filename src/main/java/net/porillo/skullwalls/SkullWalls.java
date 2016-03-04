@@ -24,12 +24,14 @@ public class SkullWalls extends JavaPlugin {
     @Getter private static Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
     @Getter private static CuboidHandler cuboidHandler;
     @Getter private static WallHandler wallHandler;
+    @Getter private static SkullWalls instance;
     @Getter private CommandHandler commandHandler;
     @Getter private ActionWorker actionWorker;
     @Getter private YamlConfig configuration;
 
     @Override
     public void onEnable() {
+        instance = this;
         wallHandler = new WallHandler();
         cuboidHandler = new CuboidHandler();
         commandHandler = new CommandHandler(this);

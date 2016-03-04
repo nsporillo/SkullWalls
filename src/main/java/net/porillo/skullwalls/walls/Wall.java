@@ -1,25 +1,26 @@
 package net.porillo.skullwalls.walls;
 
 import lombok.Getter;
-import lombok.Setter;
 import net.porillo.skullwalls.SkullWalls;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
-import org.bukkit.block.Skull;
 import org.bukkit.entity.Player;
 
 import java.util.*;
 
+/**
+ * This class is serialized to file, so we specify what fields to not serialize
+ */
 public class Wall {
 
-    private transient List<String> knownBanned = new ArrayList<>();
     private transient List<String> cachedPlayers = new ArrayList<>();
     private transient World worldObj;
-    @Getter @Setter private transient List<Slot> slots;
-    @Getter private String worldName;
+    @Getter private transient List<Slot> slots;
+
+    @Getter private Set<String> whitelist = new HashSet<>();
     @Getter private WallType type;
-    @Getter private Set<String> whitelist;
+    @Getter private String worldName;
     @Getter private String name;
     @Getter private int[] bounds;
     @Getter private boolean transparent;
@@ -29,17 +30,13 @@ public class Wall {
         this.name = name;
         this.type = type;
         this.worldObj = world;
-        this.worldName = this.worldObj.getName();
+        this.worldName = world.getName();
         this.bounds = bounds;
         this.whitelist = new HashSet<>();
 
-        setSlots(SkullWalls.getWallHandler().getSlotsFromBounds(worldObj, this.bounds));
+        slots = SkullWalls.getWallHandler().getSlotsFromBounds(world, bounds);
 
-        if (type == WallType.BANNED) {
-            this.banUpdate();
-        } else {
-            updateWall(SkullWalls.getOnlinePlayers());
-        }
+        updateWall(SkullWalls.getOnlinePlayers());
     }
 
     private List<String> getCachedNames(List<String> players) {
@@ -55,7 +52,7 @@ public class Wall {
                 worldObj = Bukkit.getWorld(worldName);
             }
 
-            setSlots(SkullWalls.getWallHandler().getSlotsFromBounds(worldObj, this.bounds));
+            slots = SkullWalls.getWallHandler().getSlotsFromBounds(worldObj, bounds);
         }
 
         List<String> copy = getCachedNames(players);
@@ -70,8 +67,12 @@ public class Wall {
                 }
             }
         } else if (type == WallType.BANNED) {
-            banUpdate();
-            copy = knownBanned;
+            copy = new ArrayList<>();
+            copy.addAll(WallHandler.getBanCache());
+
+            if(slots.size() < copy.size()) {
+                copy = copy.subList(0, slots.size());
+            }
         }
 
         for (Slot s : slots) {
@@ -82,19 +83,6 @@ public class Wall {
         }
 
         this.verifyState();
-    }
-
-    private void banUpdate() {
-        int max = this.slots.size();
-        int tot = 0;
-        for (OfflinePlayer op : Bukkit.getBannedPlayers())
-            if (tot < max - 1) {
-                this.knownBanned.add(op.getName());
-                tot++;
-            } else {
-                System.err.println("Wall has " + max + " max slots, theres too many banned players! (" + Bukkit.getBannedPlayers().size() + ")");
-                break;
-            }
     }
 
     public void setTransparent(boolean value) {
@@ -109,10 +97,8 @@ public class Wall {
         if (this.slots.size() < num) {
             return;
         }
-        // this.slots = Utils.offset(this.slots, num);
-        if (this.type == WallType.BANNED) {
-            this.banUpdate();
-        }
+
+        this.slots = WallHandler.offset(this.slots, num);
         this.updateWall(null);
     }
 

@@ -6,10 +6,13 @@ import lombok.Setter;
 import net.porillo.skullwalls.SkullWalls;
 import net.porillo.skullwalls.collections.ConcurrentHashSet;
 import org.apache.commons.io.FileUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,10 +26,26 @@ import static java.lang.Double.NaN;
 public class WallHandler {
 
     @Getter @Setter private WallStore wallStore;
+    @Getter private final static Set<String> banCache = new ConcurrentHashSet<>();
     private final File wallsFile = new File(new File("plugins" + File.separator + "SkullWalls"), "walls.json");
 
     public WallHandler() {
         loadWalls();
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if(wallStore.contains(WallType.BANNED)) {
+                    banCache.clear();
+
+                    for(OfflinePlayer op : Bukkit.getOfflinePlayers()) {
+                        if(op.isBanned()) {
+                            banCache.add(op.getName());
+                        }
+                    }
+                }
+            }
+        }.runTaskTimerAsynchronously(SkullWalls.getInstance(), 20L, 1200L); // Update ban cache
     }
 
     public void loadWalls() {
@@ -124,7 +143,7 @@ public class WallHandler {
         return slot.distance(eye);
     }
 
-    public List<Slot> offset(List<Slot> l, int i) {
+    public static List<Slot> offset(List<Slot> l, int i) {
         List<Slot> x = new ArrayList<>();
         List<Slot> y = new ArrayList<>(l.subList(i, l.size()));
         List<Slot> z = new ArrayList<>(l.subList(0, i > 1 ? i : 1));
@@ -144,5 +163,14 @@ public class WallHandler {
 
     private static class WallStore {
         @Getter private Set<Wall> walls = new ConcurrentHashSet<>();
+
+        public boolean contains(WallType type) {
+            for (Wall wall : walls) {
+                if (wall.getType() == type) {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }
