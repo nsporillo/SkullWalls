@@ -19,32 +19,29 @@ public class ActionWorker {
     public void executeAction(BlockDamageEvent e, String name) {
         Player player = e.getPlayer();
         ItemStack item = e.getItemInHand();
-        for (Action a : this.skws.getConfiguration().getActionMap().values())
-            if (a.getItem() == item.getTypeId() && player.hasPermission(a.getPerm())) {
-                String cmd = a.execute(name, player.getName());
-                player.sendMessage(GRAY + "Successfully executed '/" + cmd + "' ");
-                this.skws.log(player.getName() + " executed '/" + cmd + "' using a " + item.getType().toString().toLowerCase());
-            }
+        this.skws.getConfiguration().getActionMap().values().stream().filter(a -> a.getItem() == item.getTypeId() && player.hasPermission(a.getPerm())).forEach(a -> {
+            String cmd = a.execute(name, player.getName());
+            player.sendMessage(GRAY + "Successfully executed '/" + cmd + "' ");
+            this.skws.getLogger().info(player.getName() + " executed '/" + cmd + "' using a " + item.getType().toString().toLowerCase());
+        });
     }
 
     public void executeCuboid(BlockDamageEvent e) {
         Player p = e.getPlayer();
         if (p.hasPermission("skullwalls.wand")) {
             Block b = e.getBlock();
-            this.skws.getCuboidHandler().add(p, b);
-            int step = this.skws.getCuboidHandler().getStep(p);
+            SkullWalls.getCuboidHandler().add(p, b);
+            int step = SkullWalls.getCuboidHandler().getStep(p);
+
             if (step == 1) {
-                p.sendMessage(GREEN + "Selected bound one " + GOLD + b.getX()
-                        + GREEN + ", " + GOLD + b.getY() + GREEN
-                        + ", " + GOLD + b.getZ());
+                p.sendMessage(GREEN + "Selected bound one " + GOLD + b.getX() + GREEN + ", " + GOLD + b.getY() + GREEN + ", " + GOLD + b.getZ());
             } else if (step == 2) {
-                p.sendMessage(GRAY + "Selected bound two " + GOLD + b.getX()
-                        + GRAY + ", " + GOLD + b.getY() + GRAY + ", "
-                        + GOLD + b.getZ());
+                p.sendMessage(GRAY + "Selected bound two " + GOLD + b.getX() + GRAY + ", " + GOLD + b.getY() + GRAY + ", " + GOLD + b.getZ());
                 p.sendMessage(BLUE + "Use /skull create to create a new skull wall");
             } else {
                 p.sendMessage(RED + "Error, your step is " + step);
             }
+
             e.setCancelled(true);
         } else {
             e.setCancelled(true);

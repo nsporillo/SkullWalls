@@ -67,7 +67,7 @@ public class YamlConfig extends YamlLoader {
         }
 
         if (updated) {
-            this.plugin.log("Updated config for latest changes!");
+            this.plugin.getLogger().info("Updated config for latest changes!");
             super.saveConfig();
         }
     }

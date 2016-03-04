@@ -29,30 +29,26 @@ public class SkullWalls extends JavaPlugin {
     @Getter private YamlConfig configuration;
 
     @Override
-    public void onDisable() {
-        wallHandler.saveWalls();
-        wallHandler = null;
-    }
-
-    @Override
     public void onEnable() {
         wallHandler = new WallHandler();
         cuboidHandler = new CuboidHandler();
-        this.commandHandler = new CommandHandler(this);
-        this.actionWorker = new ActionWorker(this);
-        this.configuration = new YamlConfig(this, "config.yml");
+        commandHandler = new CommandHandler(this);
+        actionWorker = new ActionWorker(this);
+        configuration = new YamlConfig(this, "config.yml");
+
         Bukkit.getPluginManager().registerEvents(new ActionListener(this), this);
-        autoUpdate(this.configuration.getUpdateInterval());
-        updateAllWalls();
+
+        setUpWallUpdateTask(configuration.getUpdateInterval());
     }
 
-    public void log(String info) {
-        getLogger().info(info);
+    @Override
+    public void onDisable() {
+        wallHandler.saveWalls();
     }
 
     @Override
     public boolean onCommand(CommandSender s, Command c, String l, String[] a) {
-        this.commandHandler.runCommand(s, l, a);
+        commandHandler.runCommand(s, l, a);
         return true;
     }
 
@@ -72,8 +68,8 @@ public class SkullWalls extends JavaPlugin {
         return Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
     }
 
-    public void autoUpdate(int interval) {
-        log("All walls will update every " + interval + " seconds");
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, this::updateAllWalls, 20L, interval * 20);
+    public void setUpWallUpdateTask(int interval) {
+        getLogger().info("All walls will update every " + interval + " seconds");
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, this::updateAllWalls, 1L, interval * 20);
     }
 }
